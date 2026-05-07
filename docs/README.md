@@ -1,16 +1,16 @@
-# /docs
+# LAB514 — Lab Instructions
 
-This folder is for documentation and step-by-step content for your session.
+From zero to production with Fabric Apps and Copilot CLI.
 
-## What goes here
+> ⚠️ **Draft scaffold** — Each step below is a stub generated from the session outline. Fill in real instructions as the lab content is finalized.
 
-- **Labs/Workshops**: Step-by-step instructions organized into numbered exercises (e.g., `01-setup/`, `02-first-exercise/`)
-- **Demos**: Walkthrough documentation explaining the demo code in `/src`
-- **Breakouts**: Supplementary documentation, diagrams, or reference material
+## Steps
 
-## Tips
-
-- Use numbered prefixes for ordering: `01-setup/`, `02-exercise/`, `03-wrap-up/`
-- Each subfolder can have its own `README.md` or `index.md`
-- Keep images in an `assets/` subfolder if needed
-- If your session doesn't have documentation beyond the README, feel free to remove this folder
+1. [Setup & prerequisites](./01-setup/README.md)
+2. [Bootstrap app from template](./02-bootstrap/README.md)
+3. [Explore the template](./03-explore-template/README.md)
+4. [Run the app locally](./04-run-locally/README.md)
+5. [Deploy to production](./05-deploy/README.md)
+6. [Add a feature with Copilot CLI](./06-add-feature/README.md)
+7. [Apply migration and redeploy](./07-migrate-and-redeploy/README.md)
+8. [Explore data with Fabric intelligence](./08-fabric-insights/README.md)

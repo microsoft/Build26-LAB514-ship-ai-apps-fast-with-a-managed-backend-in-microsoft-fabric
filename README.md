@@ -46,16 +46,17 @@ Skip the infra plumbing and ship a real enterprise app. In this hands-on lab, bu
 ### 🏫 Getting started in a guided session
 
 To get started in a guided lab session:
-- <!-- step 1 -->
-- <!-- step 2 -->
-- <!-- step 3 -->
+- Open the lab environment provided to you
+- Sign in to GitHub and to Microsoft Fabric using the credentials shared by the proctor
+- Open the [`/docs/`](./docs/README.md) folder and start with [Step 1: Setup & prerequisites](./docs/01-setup/README.md)
 
 ### 🏠 Getting started in your own environment
 
 If you're following these steps at your own pace:
 - Clone this repository
-- Set up your development environment
-- <!-- step 3 -->
+- Complete [Step 1: Setup & prerequisites](./docs/01-setup/README.md) to install Node.js, the GitHub Copilot CLI, and the Microsoft Fabric tooling
+- Sign in to a Microsoft Fabric workspace where you have permission to deploy apps (note: deploying may incur cloud costs)
+- Work through the lab steps starting at [`/docs/`](./docs/README.md)
 
 ### 🧠 Learning Outcomes
 
@@ -73,7 +74,35 @@ Use these as a starting point — or write your own!
 
 <!-- Prompts will be tailored to this session's content during repo setup. -->
 
-> *Prompts coming soon — check back after the session content is finalized.*
+1. Understand Fabric Apps:
+
+   ```
+   Using the Microsoft Learn MCP Server, find the latest documentation on Fabric Apps and explain what problems it solves compared to building an enterprise app from scratch on Azure.
+   ```
+
+2. Try the Copilot CLI workflow:
+
+   ```
+   Help me install the GitHub Copilot CLI, then walk me through using it to add a new field to an existing TypeScript data model and generate the matching database migration.
+   ```
+
+3. Build something with a template:
+
+   ```
+   Show me how to bootstrap a new Fabric Apps project from a template, run it locally, and deploy it to a Fabric workspace in one command.
+   ```
+
+4. Go deeper on data agents:
+
+   ```
+   Using the Microsoft Learn MCP Server, find the latest docs on Microsoft Fabric data agents and walk me through creating one over a semantic model so I can ask natural-language questions about my app's data.
+   ```
+
+5. Connect from a notebook:
+
+   ```
+   Help me write a Python notebook that connects to a published Fabric data agent using the OpenAI SDK and runs a few sample queries.
+   ```
 
 ### 💻 Technologies Used
 
@@ -89,6 +118,10 @@ Use these as a starting point — or write your own!
 | Resource | Description |
 |:---------|:------------|
 | [https://aka.ms/build26-next-steps](https://aka.ms/build26-next-steps) | Take the next step in your learning journey after Build 2026 |
+| [Microsoft Fabric documentation](https://learn.microsoft.com/fabric/) | Learn about Fabric capabilities including data, AI, and apps |
+| [GitHub Copilot CLI documentation](https://docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-in-the-cli) | Use Copilot as an agent in your terminal to read, edit, and ship code |
+| [Build a data agent in Microsoft Fabric](https://learn.microsoft.com/fabric/data-science/concept-data-agent) | Step-by-step guide to creating a Fabric data agent on top of a semantic model |
+| [Microsoft Learn MCP Server](https://github.com/MicrosoftDocs/MCP) | Connect agents to live Microsoft official documentation |
 
 
 ### 🌟 Microsoft Learn MCP Server
