@@ -1,0 +1,29 @@
+{
+  "name": "rayfin",
+  "version": "0.2.0",
+  "description": "Skill and MCP tools for building apps with Rayfin — scaffolding, data modeling with TC39 decorators, auth, blob storage, type-safe GraphQL queries, DAB config generation, and deployment to Microsoft Fabric.",
+  "author": {
+    "name": "Microsoft",
+    "url": "https://www.microsoft.com"
+  },
+  "keywords": [
+    "rayfin",
+    "data-api-builder",
+    "dab",
+    "fabric",
+    "typescript",
+    "decorators",
+    "graphql",
+    "auth",
+    "storage",
+    "deployment"
+  ],
+  "skills": ["skills/rayfin"],
+  "mcpServers": {
+    "rayfin": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@microsoft/rayfin-mcp", "start"]
+    }
+  }
+}
