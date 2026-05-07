@@ -29,7 +29,14 @@ You created a Fabric workspace in [Step 1](../01-setup/README.md#5-create-a-fabr
 
 ## 3. Scaffold the project
 
-In the Visual Studio Code terminal, run this command (replace `<workspace-uri>` with the URL you just copied):
+In the Visual Studio Code terminal, create a new folder with:
+
+```sh
+mkdir field-services-app
+cd field-services-app
+```
+
+Then run this command (replace `<workspace-uri>` with the URL you just copied):
 
 ```sh
 npm create @microsoft/rayfin@latest -- --project-name field-services-app --template "C:/LabFiles/template/field-services-app" --workspace-uri <workspace-uri>
@@ -37,8 +44,7 @@ npm create @microsoft/rayfin@latest -- --project-name field-services-app --templ
 
 The CLI will:
 
-- Create a new folder called `field-services-app` in your current directory
-- Copy the template files in this
+- Copy the template files in the current directory
 - Wire the project to your Fabric workspace using the `--workspace-uri` you provided
 - Run `npm install` to pull dependencies (this can take a couple of minutes on first run)
 
@@ -47,7 +53,7 @@ The CLI will:
 Once the scaffolding finishes, open the new project in Visual Studio Code:
 
 ```sh
-code ./field-services-app
+code .
 ```
 
 You should see a folder structure that includes:
