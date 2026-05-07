@@ -83,7 +83,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
 The lab deploys your app to a Microsoft Fabric workspace, which must be backed by a Fabric capacity.
 
 1. In the Fabric portal, open **Workspaces** in the left navigation and click **+ New workspace**.
-2. Give it a name (for example, `lab514-workorders`).
+2. Give it a **unique** name (Fabric workspace names must be unique across the tenant). Add something distinctive like your initials or a random suffix, for example `lab514-workorders-<your-initials>`.
 3. Expand **Advanced** → **Workspace type** and ensure **Fabric** is selected.
 4. Pick the capacity:
    - **Guided lab:** Under **Details**, you should see a Fabric capacity already assigned to this workspace.
