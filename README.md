@@ -37,11 +37,11 @@ Once your content is in the repo, use these three phrases with Copilot to build 
 
 # [Microsoft Build 2026](https://build.microsoft.com)
 
-## 🔥 BRKXXX: SESSION TITLE
+## 🔥 LAB514: From zero to production with Fabric Apps and Copilot CLI
 
 ### Session Description
 
-*Add Session Description*
+Skip the infra plumbing and ship a real enterprise app. In this hands-on lab, build a work-order management app for Contoso DIY's new home services with Fabric Apps—a managed backend giving you database, auth, hosting, functions, storage, and real-time out of the box. Start from a template, deploy to production in one command, then add features through the Copilot CLI without worrying about migrations. Finish by tapping Fabric intelligence to turn app data into insights.
 
 ### 🏫 Getting started in a guided session
 
@@ -59,15 +59,15 @@ If you're following these steps at your own pace:
 
 ### 🧠 Learning Outcomes
 
-By the end of this session, you will be able to:
+By the end of this lab, you will be able to:
 
-- <!-- outcome 1 -->
-- <!-- outcome 2 -->
-- <!-- outcome 3 -->
+- Bootstrap and deploy a production-ready enterprise app using Fabric Apps templates with a single command
+- Use the GitHub Copilot CLI to add new features and evolve your app's data schema without manually managing migrations
+- Leverage Microsoft Fabric intelligence (semantic models and data agents) to turn application data into actionable insights
 
 ### 💬 Keep Learning with Copilot
 
-Try these prompts with GitHub Copilot to explore the topics from this session. Open Copilot Chat in VS Code (`Ctrl+Alt+I` on Windows/Linux, `Cmd+Shift+I` on Mac), paste a prompt, and see what you learn. Try connecting the [Microsoft Learn MCP Server](#-microsoft-learn-mcp-server) for the latest official documentation.
+Try these prompts with GitHub Copilot to explore the topics from this lab. Open Copilot Chat in VS Code (`Ctrl+Alt+I` on Windows/Linux, `Cmd+Shift+I` on Mac), paste a prompt, and see what you learn. Try connecting the [Microsoft Learn MCP Server](#-microsoft-learn-mcp-server) for the latest official documentation.
 
 Use these as a starting point — or write your own!
 
@@ -77,9 +77,12 @@ Use these as a starting point — or write your own!
 
 ### 💻 Technologies Used
 
-1. <!-- technology 1 -->
-1. <!-- technology 2 -->
-1. <!-- technology 3 -->
+1. [Fabric Apps](https://learn.microsoft.com/fabric/)
+1. [GitHub Copilot CLI](https://docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-in-the-cli)
+1. [Microsoft Fabric](https://learn.microsoft.com/fabric/) — semantic models and data agents
+1. [Visual Studio Code](https://code.visualstudio.com/docs)
+1. [TypeScript](https://learn.microsoft.com/training/paths/build-javascript-applications-typescript/)
+1. [Docker](https://learn.microsoft.com/training/paths/intro-to-docker/)
 
 ### 📚 Resources and Next Steps
 
@@ -107,10 +110,10 @@ For more information, setup instructions for other dev clients, and to post comm
 
 <table>
 <tr>
-    <td align="center"><a href="http://github.com/yourGitHubHandle">
-        <img src="https://github.com/yourGitHubHandle.png" width="100px;" alt="INSERT NAME HERE"/><br />
-        <sub><b>INSERT NAME HERE</b></sub></a><br />
-            <a href="https://github.com/yourGitHubHandle" title="talk">📢</a>
+    <td align="center"><a href="http://github.com/sinedied">
+        <img src="https://github.com/sinedied.png" width="100px;" alt="Yohan Lasorsa"/><br />
+        <sub><b>Yohan Lasorsa</b></sub></a><br />
+            <a href="https://github.com/sinedied" title="talk">📢</a>
     </td>
 </tr></table>
 
