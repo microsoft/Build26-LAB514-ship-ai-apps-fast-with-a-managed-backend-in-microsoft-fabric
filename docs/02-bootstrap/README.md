@@ -59,6 +59,18 @@ You should see a folder structure that includes:
 
 You'll explore these folders in detail in [Step 3](../03-explore-template/README.md).
 
+## 5. Initialize git and commit
+
+Initialize a git repository so you can track changes (and so the GitHub Copilot CLI in [Step 6](../06-add-feature/README.md) can show you clean diffs of what it modifies).
+
+In the Visual Studio Code terminal, from inside the new project folder:
+
+```sh
+git init
+git add .
+git commit -m "Initial commit"
+```
+
 ---
 
 ## ✅ Verify
