@@ -1,4 +1,4 @@
-## Draft outline for the lab
+## Draft outline for the lab (45-60min)
 
 0. Setup prerequites
   - login to Github SSO and Fabric, login to Github Copilot in VS Code and Copilot CLI
@@ -38,7 +38,8 @@
 
 7. Explore the data in Fabric
   - open special /_admin/ page in the deployed URL to generate more data directly from the frontend
-  - upload semantic model for the app (automate?)
+  - upload semantic model for the app
+    * /!\ if lab time is bumped to 75min, then instead we can use the extra time with the Power BI desktop app to create the semantic model and connect it to the data source, and then publish it to Fabric from there.
   - create a data agent using the semantic model, connect data source
   - run a query on the data with the semantic model in agent: "how many work orders do we have? how many are assigned to each pro? etc."
   - (notebook python?) create a Jupyter notebook that connects to the published OAI agent with SDK to show how to ask the created agent
