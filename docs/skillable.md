@@ -526,7 +526,7 @@ You've seen the app run locally. Now let's take the **same code, same schema, sa
 From the project folder, in a new terminal, run:
 
 ```sh
-npx rayfin up
+npx rayfin up --encryption-fallback-enabled
 ```
 
 If this is the first time you deploy from this machine, the CLI will:
