@@ -8,15 +8,11 @@ The interesting part: you'll do this with the **GitHub Copilot CLI** as your sof
 
 [**Agent skills**](https://agentskills.io/) are reusable bundles of instructions, conventions, and tooling that teach an AI coding agent how to work in a specific domain. The **rayfin agent skill** packages everything the Copilot CLI needs to know about Rayfin — entities, decorators, permissions, the typed client, the CLI workflow — so the agent generates code that fits Rayfin conventions instead of guessing. Under the hood, the skill talks to the **rayfin MCP server** (which ships in the template as the `@microsoft/rayfin-mcp` dev dependency), giving the agent live access to the official Rayfin docs while it works.
 
-The rayfin agent skill is **not installed automatically** with the project: you need to install it once so the Copilot CLI loads it whenever you open a Rayfin project.
-
-Open a terminal and run the install command for the rayfin agent skill:
+The rayfin agent skill is **installed automatically** when you scaffold the project from the template, so you're good to go. If you started from a blank slate or want to add it to an existing project, you can install it with the following command:
 
 ```sh
 npx rayfin init ai-files install
 ```
-
-[TODO: document the exact install command for the rayfin agent skill, currently the `npx rayfin init ai-files install` command from the docs isn't working]
 
 This will install the necessary files in the project and configure the MCP server. These files can be committed to source control and shared across your team, so everyone has the same agent guidance.
 
