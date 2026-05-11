@@ -1,4 +1,4 @@
-# 8. Explore data with Fabric intelligence
+# Explore data with Fabric intelligence
 
 > ⚠️ Draft — fill in detailed instructions.
 
@@ -16,10 +16,6 @@ Explore the data in Microsoft Fabric:
 
 ## Things to add
 
-- [ ] How to create the semantic model using Power BI desktop and publish to Fabric
+- [ ] How to create the semantic model using Power BI desktop and publish to Fabric (step by step with screenshots)
 - [ ] Step-by-step for creating the data agent in Fabric
 - [ ] Sample notebook + expected outputs
-
----
-
-Prev ← [7. Redeploy and seed test data](../07-redeploy-and-seed/README.md)
