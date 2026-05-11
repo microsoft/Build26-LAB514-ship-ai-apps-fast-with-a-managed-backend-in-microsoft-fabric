@@ -4,6 +4,7 @@ From zero to production: ship full-stack apps fast with coding agents and a mana
 
 ## Steps
 
+0. [Introduction](./00-intro/README.md)
 1. [Setup & prerequisites](./01-setup/README.md)
 2. [Bootstrap app from template](./02-bootstrap/README.md)
 3. [Explore the template](./03-explore-template/README.md)
