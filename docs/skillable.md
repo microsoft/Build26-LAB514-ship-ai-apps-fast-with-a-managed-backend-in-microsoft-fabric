@@ -231,9 +231,14 @@ We'll explore these folders in detail in the next page.
 
 Initialize a git repository so you can track changes and show clean diffs when we'll update the code.
 
-In the Visual Studio Code terminal, from inside the new project folder:
+In the Visual Studio Code terminal, from inside the new project folder, run:
 
 ```sh
+# Set generic git user for the lab
+git config --global user.email "lab@microsoft.com"
+git config --global user.name "Build Lab"
+
+# Initialize git, add files, and make the first commit
 git init
 git add .
 git commit -m "Initial commit"
