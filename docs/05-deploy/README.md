@@ -5,8 +5,6 @@ You've seen the app run locally. Now let's take the **same code, same schema, sa
 > [!NOTE]
 > The Fabric workspace and capacity you set up earlier is the deployment target. The bootstrap command you used already wired your project to that workspace via `--workspace-uri`.
 
----
-
 ## 1. Run **rayfin up**
 
 From the project folder, in a new terminal, run:

@@ -1,10 +1,8 @@
-# 6. Add a feature with Copilot CLI
+# Add a feature with Copilot CLI
 
 So far you've built and shipped the template. Now let's **extend** it. You'll add a brand-new feature that touches both the data model and the UI: a **comments thread** on each work order, so service pros and the manager can communicate about a job over time.
 
 The interesting part: you'll do this with the **GitHub Copilot CLI** as your software engineer. The **rayfin agent skill** teaches the agent how Rayfin entities, decorators, permissions, and the typed client work, so it can make changes that fit the project's conventions instead of guessing.
-
----
 
 ## 1. Install the rayfin agent skill
 
@@ -12,9 +10,17 @@ The interesting part: you'll do this with the **GitHub Copilot CLI** as your sof
 
 The rayfin agent skill is **not installed automatically** with the project: you need to install it once so the Copilot CLI loads it whenever you open a Rayfin project.
 
+Open a terminal and run the install command for the rayfin agent skill:
+
+```sh
+npx rayfin init ai-files install
+```
+
 [TODO: document the exact install command for the rayfin agent skill, currently the `npx rayfin init ai-files install` command from the docs isn't working]
 
-On top of the skill, the template ships with an [**`AGENTS.md`**](https://agents.md/) file at the project root. `AGENTS.md` is an emerging convention for project-level agent instructions — a single, predictable place where any AI coding agent looks for repo-specific guidance (architecture, key files, conventions). Open `AGENTS.md` and skim it: that's exactly the context the Copilot CLI will pick up when you start it in this project.
+This will install the necessary files in the project and configure the MCP server. These files can be committed to source control and shared across your team, so everyone has the same agent guidance.
+
+On top of the skill, the template ships with an [**`AGENTS.md`**](https://agents.md/) file at the project root. `AGENTS.md` is a convention for project-level agent instructions: a single, predictable place where any AI coding agent looks for repo-specific guidance (architecture, key files, conventions). Open `AGENTS.md` and skim it: that's exactly the context the Copilot CLI will pick up when you start it in this project.
 
 So once the skill is installed, the Copilot CLI has everything it needs: project-specific guidance from `AGENTS.md`, rayfin-wide best practices from the agent skill, and live Rayfin docs through the MCP server.
 
@@ -28,7 +34,8 @@ copilot --yolo
 
 When it asks whether to trust the workspace, choose **Always trust this workspace**.
 
-> ⚡ **What does `--yolo` do?** It auto-approves every tool call (file edits, terminal commands, MCP calls) without asking for confirmation each time. Great for an interactive lab where you want the agent to just *do the thing*, much slower without it. **Don't use `--yolo` against a repo with secrets, production data, or anything you can't easily revert**.
+> [!TIP]
+> **What does --yolo do?** It auto-approves every tool call (file edits, terminal commands, MCP calls) without asking for confirmation each time. Great for an interactive lab where you want the agent to just *do the thing*, much slower without it. **Don't use --yolo against a repo with secrets, production data, or anything you can't easily revert**.
 
 Once you're at the Copilot prompt, switch to a stronger model for this step. Run:
 
@@ -38,7 +45,8 @@ Once you're at the Copilot prompt, switch to a stronger model for this step. Run
 
 Pick **GPT-5.4** with **low** reasoning effort. GPT-5.4 handles the multi-file refactor well, and "low" keeps responses fast enough for a live lab.
 
-> 💡 The `/model` selection persists for the duration of this Copilot CLI session. If you exit and re-enter, set it again.
+> [!TIP]
+> The **/model** selection persists for the duration of this Copilot CLI session. If you exit and re-enter, set it again.
 
 ## 3. Prompt for the comments feature
 
@@ -53,12 +61,12 @@ The agent will:
 - Plan the change and show you the files it intends to add or modify.
 - Add a new **`Comment`** entity in `rayfin/data/`, with `@uuid`, `@text({ max: ... })`, `@date` decorators, and a `@one(() => WorkOrder)` relationship.
 - Register the new entity in `rayfin/data/schema.ts`.
-- Apply a `@role` rule so only the assigned service pro and the manager can read/create comments — using the row-level filter pattern you saw in [Step 3](../03-explore-template/README.md).
+- Apply a `@role` rule so only the assigned service pro and the manager can read/create comments, using the row-level filter pattern you saw earlier during the code exploration.
 - Update the React components for the work-order detail view to add a **collapsible "Comments" section**, fetch comments, and post new ones using the typed Rayfin data client.
 
 ## 4. Review what changed
 
-Once the agent finishes, look through the changes in the Visual Studio Code Source Control view (or `git status` / `git diff`).
+Once the agent finishes, look through the changes in the Visual Studio Code Source Control view (or use `git status` / `git diff`).
 
 Expect to see at least:
 
@@ -67,11 +75,12 @@ Expect to see at least:
 - New or updated components under `src/components/` and/or `src/pages/`
 - A new service or hook for talking to the comments API (e.g., extensions to `RayfinFieldService.ts` or `useFieldService.ts`)
 
-> 🧠 **What you didn't have to do:** write a migration, hand-roll an API endpoint, build a REST client, wire up authorization middleware. The decorators + the typed client + the Copilot skill cover all of that for you.
+> [!NOTE]
+> **What you didn't have to do:** write a migration, hand-roll an API endpoint, build a REST client, wire up authorization middleware. The decorators + the typed client + the Copilot skill cover all of that for you.
 
 ## 5. Apply the schema locally and try it
 
-We asked the agent **not** to run any database changes, so the new `Comment` entity exists only in TypeScript at this point. To actually try the feature in the browser, you need to apply the schema to your local database.
+We asked the agent **not** to run any database changes, so the new **Comment** entity exists only in TypeScript at this point. To actually try the feature in the browser, you need to apply the schema to your local database.
 
 In the terminal where you ran `rayfin dev`, apply the schema:
 
@@ -81,9 +90,10 @@ npx rayfin dev db apply
 
 This compiles the decorators in `rayfin/data/` to a database migration and applies it to the local SQL database. You should see a confirmation that the new `Comment` table was created.
 
-> 💡 If you'd rather use the project's npm script: `npm run rayfin:db` does the same thing.
+> [!TIP]
+> If you'd rather use the project's npm script: `npm run rayfin:db` does the same thing.
 
-Now switch back to the frontend tab in your browser. If the new UI doesn't show up, restart the Vite dev server, in a second terminal where `npm run dev` was running, stop it (`Ctrl+C`) and start it again:
+Now switch back to the frontend tab in your browser. If the new UI doesn't show up, restart the Vite dev server, in the terminal where `npm run dev` was running, stop it (`Ctrl+C`) and start it again:
 
 ```sh
 npm run dev
@@ -113,12 +123,7 @@ The agent applies refinements with the same project context, so you stay in flow
 ## ✅ Verify
 
 - A new `Comment` entity exists in `rayfin/data/` and is exported from `schema.ts`.
-- `npx rayfin dev db apply` succeeded and the local schema now includes the `Comment` table.
+- `npx rayfin dev db apply` succeeded and the local schema now includes the **Comment** table.
 - The work-order UI has a **collapsible Comments section** (folded by default), and you can post comments end-to-end as a service pro and the manager.
 
-You've added a real, schema-backed feature locally. Next, push it to production.
-
----
-
-Prev ← [5. Deploy to production](../05-deploy/README.md) · Next → [7. Redeploy and seed test data](../07-redeploy-and-seed/README.md)
-
+You've added a new schema-backed feature locally. Next, let's push it to production.
