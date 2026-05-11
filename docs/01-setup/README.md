@@ -92,7 +92,7 @@ The lab deploys your app to a Microsoft Fabric workspace, which must be backed b
    - **Your own environment:** select your own Fabric capacity. If you don't have once, you can choose to activate a **Fabric trial**.
 5. Click **Apply** to create the workspace.
 
-You'll deploy into this workspace in Step 5.
+You'll deploy into this workspace later in the lab.
 
 ---
 
