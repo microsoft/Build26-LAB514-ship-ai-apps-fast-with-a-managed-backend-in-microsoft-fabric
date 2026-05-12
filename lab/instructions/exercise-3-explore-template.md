@@ -1,78 +1,73 @@
 # Exercise 3: Explore the App Template
 
-In this exercise, you will explore the app template that you bootstrapped in the previous exercise. Before running the app, take a few minutes to look at what **rayfin** scaffolded for you. The Field Services template is a real, working full-stack app: a React + TypeScript frontend, a Rayfin-managed backend, authentication, and a starter data model. Knowing where things live will make the rest of the lab much easier.
+In this exercise, you will quickly inspect the app you created in Exercise 2.
+
+You will look at:
+
+- the main project folders
+- the Rayfin configuration file
+- the Rayfin data model
+- the frontend files you may use later
 
 > [!Tip]
-> You don't need to fully understand every file — this is a guided tour. Skim, then move on.
+> Skim the files. You do not need to understand every line yet.
 
 ## Task 1: Explore the project structure
 
-1. In the new Visual Studio Code window that opened in the previous exercise, take a look at the folder structure in the Explorer pane on the left.
+1. In Visual Studio Code, expand the `field-services-app` folder.
 
-1. The folders that we focus on in this lab are:
+1. Notice these files and folders:
 
-    | Folder / file | What it is |
+    | Folder / file | Why it matters |
     | --- | --- |
-    | `rayfin/rayfin.yml` | Rayfin app configuration — declares which managed services are turned on (auth, data, hosting…) |
-    | `rayfin/data/` | Backend data model — one TypeScript file per entity, plus a `schema.ts` that exports them |
-    | `src/` | React + TypeScript frontend |
-    | `src/services/` | Service layer that talks to the Rayfin backend (auth + data clients) |
-    | `src/pages/` | Page components — `Dashboard.tsx` (Service Pro + manager views), `AuthPage.tsx`, hidden `AdminPage.tsx` |
-    | `src/components/ui/` | Reusable UI components (Radix-based, styled with Tailwind CSS) |
-    | `data/` | The original spec (`SPEC.md`) and seed dataset (`work-orders.jsonc`) used to generate this template — informational only |
-    | `package.json` | Scripts: `dev`, `rayfin:dev`, `rayfin:db`, `dev:fabric`, `build`, `test` |
-    | `AGENTS.md` | High-level project guide intended for AI coding agents — useful reference for humans too |
+    | `rayfin/rayfin.yml` | Turns Rayfin managed services on or off. |
+    | `rayfin/data/` | Defines the backend data model. |
+    | `src/` | Contains the React + TypeScript frontend. |
+    | `src/services/` | Connects the frontend to Rayfin auth and data. |
+    | `src/pages/` | Contains the main app pages. |
+    | `src/components/ui/` | Contains reusable UI components. |
+    | `data/` | Contains the original app spec and seed dataset. |
+    | `package.json` | Lists scripts such as `dev`, `rayfin:dev`, `rayfin:db`, `dev:fabric`, `build`, and `test`. |
+    | `AGENTS.md` | Gives guidance for AI coding agents. |
 
-1. For now, you can ignore everything else that was generated (like Vite/TypeScipt/Tailwind config, generated files, etc.)
+    We will review the Rayfin configuration and data model in more detail in the next tasks, review the rest of the files lightly for now.
 
-## Task 2: Explore the Rayfin Yaml Configuration
+1. Ignore the generated configuration files for now. You will come back to the important files later.
 
-This is the main configuration file for your Rayfin app. It tells the platform which managed services to provision and how they are wired together.
+## Task 2: Explore the Rayfin YAML configuration
 
-1. Open the `rayfin/rayfin.yml` file and take a look at the contents. The Rayfin CLI reads this file to know which services to provision for your app.
+The `rayfin/rayfin.yml` file tells Rayfin which services this app uses.
 
-    ```yaml
-    id: field-services-app
-    name: Field Services
-    version: 1.0.0
-    services:
-      auth:
-        enabled: true
-        password:
-          enabled: true
-        fabric:
-          enabled: true
-        allowedRedirectUris:
-          - http://localhost:5173
-          - http://localhost:5173/auth/callback
-      data:
-        enabled: true
-        dialect: mssql
-      storage:
-        enabled: false
-      staticHosting:
-        enabled: true
-        folder: dist
-        buildCommand: npm run build:fabric
-        indexDocument: index.html
-    ```
+1. Open `rayfin/rayfin.yml`.
 
-1. This configuration file is declaring that we want to use the Auth, Data, and Static Hosting managed services. The Auth service is configured to allow password-based sign in as well as Microsoft Fabric SSO. The Static Hosting service is configured to serve files from the `dist` folder and to run `npm run build:fabric` to build the frontend for production when we deploy to Fabric later in the lab.
+1. Find the `services` section.
 
-1. You will notice the following:
+1. Notice these services:
 
-    - **`auth`** — the managed authentication service is on. Two providers are enabled: **password** (used for local development) and **fabric** (Microsoft Entra SSO, used when deployed to Microsoft Fabric).
-    - **`data`** — a managed SQL database is provisioned automatically; you don't need to set up any infrastructure.
-    - **`storage`** — turned off for this template, but available if your app needs blob storage.
-    - **`staticHosting`** — when you deploy with `rayfin up`, the frontend is built (`npm run build:fabric`) and the contents of `dist/` are served by Fabric.
+    | Service | What it does in this app |
+    | --- | --- |
+    | `auth` | Two providers are enabled: **password** (used for local development) and **fabric** (Microsoft Entra SSO, used when deployed to Microsoft Fabric). |
+    | `data` | Creates a managed SQL database for the app. |
+    | `storage` | Is turned off in this template, but can be enabled for blob storage. |
+    | `staticHosting` | Hosts the built frontend from `dist/` after deployment. |
 
-1. You only declare what you need and the platform handles *how* to provision and wire it up.
+1. Do not edit this file yet. For now, just learn where the settings live.
 
 ## Task 3: Explore the Data Model
 
-The `rayfin/data/` folder contains the data model for your app. Each file (except `schema.ts`) represents a data entity, and `schema.ts` exports them together.
+The `rayfin/data/` folder defines the database tables for this app.
 
-1. Open the `rayfin/data/` folder and you will see three files: a per entity file for each table, and a `schema.ts` file that aggregates them.
+1. Open `rayfin/data/`.
+
+1. You should see these files:
+
+    - `ServicePro.ts`
+    - `WorkOrder.ts`
+    - `schema.ts`
+
+1. Open `schema.ts`.
+
+1. Look for the imports and the `schema` array:
 
     ```ts
     import { ServicePro } from './ServicePro.js';
@@ -86,9 +81,11 @@ The `rayfin/data/` folder contains the data model for your app. Each file (excep
     export const schema = [ServicePro, WorkOrder];
     ```
 
-1. Every entity you want in the database needs to be both imported and added to the **schema** array. You will work with this file when you are adding new entities using the GitHub Copilot CLI in later exercises.
+1. Remember this rule: every entity must be imported and added to the `schema` array.
 
-1. Open the `ServicePro.ts` file to see an example of how an entity is defined.
+1. Open `ServicePro.ts`.
+
+1. Look for this class:
 
     ```ts
     @entity()
@@ -103,17 +100,19 @@ The `rayfin/data/` folder contains the data model for your app. Each file (excep
     }
     ```
 
-1. Notice the **decorators** that are used to define the properties are all imported from `microsoft/rayfin-core`:
+1. Notice these decorators:
 
-    - `@entity()` - registers this class as a Rayfin entity (a database table).
-    - `@role('authenticated', '*')` - **any signed-in user** can perform **any** action (`'*'` = create, read, update, delete). For real-world data you'd usually narrow this with a `check: (claims, item) => claims.sub.eq(item.user_id)` row-level filter <!-- TODO: link to the Rayfin permissions guide on Microsoft Learn once it's published -->. For this lab the broad rule is fine.
-    - `@uuid()`, `@text({ min, max })`, `@date()` — type-safe column definitions with built-in validation. On MSSQL, always set a `max` on `@text` so DAB can generate an indexable column.
-  
-    >[!help]
-    > **Why is `user_id` a `@text()` and not a `@uuid()` or a relationship?**
-    > `user_id` doesn't reference another Rayfin entity — it stores the JWT `sub` claim from whichever auth provider is active (Rayfin password locally, Microsoft Entra in Fabric). Entra `sub` values are opaque strings, not Rayfin-shaped UUIDs, and the signed-in user isn't exposed as a queryable Rayfin entity. So the convention is: **auth-derived identity fields use `@text()`; foreign keys to other Rayfin entities use `@uuid()`**.
+    - `@entity()` creates a database table.
+    - `@role('authenticated', '*')` allows signed-in users to create, read, update, and delete rows.
+    - `@uuid()`, `@text(...)`, and `@date()` define columns.
+    - `user_id` stores the signed-in user's identity from auth.
 
-1. Open the `WorkOrder.ts` file to see another example of an entity, this one with a relationship.
+    > [!Note]
+    > `user_id` is `@text()` because auth provider user IDs are strings. It is not a relationship to another Rayfin entity.
+
+1. Open `WorkOrder.ts`.
+
+1. Look for this class:
 
     ```ts
     @entity()
@@ -134,24 +133,30 @@ The `rayfin/data/` folder contains the data model for your app. Each file (excep
     }
     ```
 
-1. In this entity there two new decorators to note:
+1. Notice these additional decorators and fields:
 
-    - `@set(...)` defines an enum-like column constrained to a fixed list of string values. It compiles to a string column with a database `CHECK` constraint, so invalid values are rejected at the database layer.
-    - `@one(() => ServicePro, { optional: true })` declares a relationship to another entity. Rayfin auto-generates the foreign key column when you use `@one()` or `@many()`; the explicit `servicePro_id?: string` field above is included here only because the application code wants to read/write that ID directly.
+    - `@set(...)` limits `status` to known values, such as `pending` and `completed`.
+    - `@one(() => ServicePro, { optional: true })` links a work order to a service pro.
+    - `servicePro_id` stores the selected service pro ID for the app to read and write.
 
-1. These TypeScript classes are the **single source of truth** for the database schema. When you change them, Rayfin regenerates the database migration for you (you'll see this in later exercises).
+1. Remember this rule: these TypeScript entity classes are the source of truth for the database schema.
 
 ## Task 4 (Optional): Explore the Frontend Code
 
-1. The frontend code lives in the `src/` folder. If you're curious, take a look around to see how the React app is structured. You don't need to understand it all right now, but here are some notes to guide you:
+You do not need to understand the full frontend in this exercise.
+
+1. Open `src/`.
+
+1. If you have time, look at these files:
 
     - `ServiceContainer.ts` — singleton that bootstraps the Rayfin client and auto-selects the right auth provider (password locally, Fabric Entra in production).
     - `rayfin/RayfinFieldService.ts` — CRUD operations for `ServicePro` and `WorkOrder` using the typed Rayfin data API.
 
-1. You don't need to understand the full implementation of the frontend to complete the lab. You can just keep these in mind:
+1. Keep these ideas in mind:
 
-    - The frontend uses a **typed client** generated from the schema you just looked at — so renaming a field in `rayfin/data/` shows up as a TypeScript error in the UI code right away.
-    - There's no hand-written REST client, no manual API plumbing.
+    - The frontend uses types generated from the Rayfin schema.
+    - If you change a field in `rayfin/data/`, TypeScript can help find frontend code that needs updating.
+    - The app does not use a hand-written REST client.
 
 ---
 
@@ -161,6 +166,6 @@ The `rayfin/data/` folder contains the data model for your app. Each file (excep
 
 @lab.Activity(ManagedServicesQuestion)
 
-If any of those don't ring a bell, scroll back up before moving on.
+If either question is unclear, review Task 2 and Task 3 before continuing.
 
 Next → [4. Run the app locally](../instructions/exercise-4-run-locally.md)

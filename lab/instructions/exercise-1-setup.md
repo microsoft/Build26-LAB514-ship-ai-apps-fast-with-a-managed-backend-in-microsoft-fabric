@@ -33,7 +33,7 @@ In this exercise, you will sign in to GitHub through Contoso DIY's enterprise SS
 
 1. Select **Continue with GitHub** in the dialog to choose a sign-in method.
 
-1. A new browser window will open prompting you to sign in to GitHub. Since you are already signed in through the SSO portal, you can simply authorize Visual Studio Code to access the GitHub account by selecting **Continue**.
+1. A new browser window will open prompting you to sign in to GitHub. Authorize Visual Studio Code to access the GitHub account by selecting **Continue**.
 
 1. In the next page that asks for permissions, select **Authorize Visual Studio Code** and you should see a dialog redirecting you back to Visual Studio Code. Select **Open** to return to Visual Studio Code.
 
@@ -58,26 +58,32 @@ The GitHub Copilot CLI uses its own authentication separate from Visual Studio C
 1. After a successful sign-in, return to the terminal and confirm that you see "Signed in successfully" in the output.
 
 1. *(Optional)*  If the Copilot CLI prompts you that an update is available, run: `/update` to update to the latest version.
+
 1. Exit the Copilot CLI by running: `/exit`. You will start it again in the next exercise when you use it to generate code.
 
 ## Task 4: Sign in to Microsoft Fabric
 
-1. In the browser, navigate to the Microsoft Fabric portal at: `https://app.fabric.microsoft.com`.
+1. In a new tab on the browser, navigate to the Microsoft Fabric portal at: `https://app.fabric.microsoft.com`.
 
 1. When prompted to sign in, use the following credentials:
 
 - **Email**: `@lab.CloudPortalCredential(User1).Username`
 - **Password**: `@lab.CloudPortalCredential(User1).Password`
 
->Note: Since you already used these credentials to sign in to the SSO portal, you may not be prompted to enter them again and will be signed in automatically.
+> [!Tip]
+> Since you already used these credentials to sign in to the GitHub SSO portal, you may not be prompted to enter them again and will be signed in automatically.
 
 ## Task 5: Create a Workspace in Fabric
 
-This lab deploys your work-order app to Microsoft Fabric, which requires you to have a workspace. A workspace is a container for all your data and analytics in Microsoft Fabric.
+This lab deploys your work-order app to a Microsoft Fabric workspace.
+
+A workspace is a container for all the Fabric items related to your project, such as databases, notebooks, and deployed applications.
 
 1. In the Fabric portal, select **Workspaces** from the left-hand navigation pane. Then select **+ New workspace**.
 
-1. Enter a name for the workspace such as `Lab514-workorders-@lab.LabInstance.Id`. Expand the **Advanced** section and navigate to the **Workspace type** setting to ensure that **Fabric** is selected.
+1. Name the workspace `Lab514-workorders-@lab.LabInstance.Id`.
+
+1. Expand the **Advanced** section and scroll to the **Workspace type** setting and ensure that **Fabric** is selected.
 
 1. Select **Apply** to create the workspace.
 
@@ -85,7 +91,7 @@ This lab deploys your work-order app to Microsoft Fabric, which requires you to 
 
 ## Verify Your Setup
 
-Navigate back in Visual Studio Code to the terminal and run the following commands to verify that your environment is set up correctly:
+Navigate back to Visual Studio Code and in the terminal and run the following commands to verify that your environment is set up correctly:
 
 1. To verify that you have the latest version of Node.js installed, run the following command:
 

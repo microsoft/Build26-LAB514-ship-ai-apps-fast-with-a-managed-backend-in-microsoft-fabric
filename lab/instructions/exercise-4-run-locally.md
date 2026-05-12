@@ -1,110 +1,173 @@
-# Exercise 4: Run the Rayfin App Locally
+# Exercise 4: Run the App Locally
 
-Since you have explored the project, let's move on to running the Rayfin app locally. You will start the **Rayfin backend (database, auth, data API)** locally, then the **frontend dev server**, and finally walk through the app's two views as a Service Pro and as a manager. This is a crucial step to verify that everything is working correctly before we deploy to Microsoft Fabric in the next exercise.
+In this exercise, you will run the Field Services app locally.
+
+You will start:
+
+- the Rayfin backend
+- the Data API explorer
+- the React frontend
+
+Then you will sign in, create a Service Pro profile, complete a work order, and test the manager view.
 
 > [!Tip]
-> The local backend is a full Rayfin environment running in Docker on your machine — same shape as production, just running locally.
+> Keep two terminals open: one for the Rayfin backend and one for the frontend.
 
 ## Task 1: Start the Rayfin backend
 
-1. In the terminal in Visual Studio Code, make sure you are in the `field-services-app` folder that was generated in Exercise 2. If not, navigate to it using the following command:
+The backend runs the local Rayfin services for this app.
+
+1. Use the terminal from the previous exercise. It should already be in the `field-services-app` folder.
+
+    > [!Tip]
+    > If you closed the terminal, open a new one and move into the project folder:
 
     ```shell
     cd field-services-app
     ```
 
-1. Start the Rayfin backend by running the following command:
+1. Start the local Rayfin backend:
 
     ```shell
     npx rayfin dev
     ```
 
-1. When you run this command, it will do the following:
+1. Wait for the services to finish starting.
 
-    - Start Docker containers for every service enabled in `rayfin/rayfin.yml` (database, auth, data API).
-    - Run health checks until everything is ready.
-    - **Auto-apply your data model** to the local database (you don't need a separate `db apply` on first run).
+1. Watch for the local backend URL in the terminal output.
 
-1. Leave this terminal running as the backend needs to stay up while you run the frontend and test the app. You'll see logs streaming in the terminal — when it's ready, the CLI prints the URLs for the local backend and the **publishable key** the frontend uses to connect.
+    It should look similar to `http://localhost:5168`.
 
-> [!help]
-> If `rayfin dev` complains about Docker, make sure Docker Desktop is running.
+1. Leave this terminal running.
 
-> [!TIP]
-> The rayfin backend will keep running in the background, even if you close the terminal or Visual Studio Code. To stop it, run `npx rayfin dev stop` from your project folder.
+    The frontend needs the backend to stay online.
 
-### Task 1.1 Optional: Enable the Aspire Dashboard
+> [!Tip]
+> On the first run, Rayfin may take a few minutes to start Docker containers and apply the data model.
+> If Rayfin reports a Docker error, make sure Docker Desktop is running.
 
-1. If you want to see live telemetry from your app in the Aspire dashboard like request logs, traces, and service health; stop the backend with the following command:
+## Task 1.1 (Optional): Open the Aspire dashboard
+
+The Aspire dashboard shows service health, logs, and traces.
+
+Only do this task if your instructor asks you to use the dashboard.
+
+1. Stop the local backend:
 
     ```shell
-    npx rayfin dev stop
+    npx rayfin dev --down
     ```
 
-1. Restart the backend with the `--debug` flag:
+1. Restart the backend with debug output:
 
     ```shell
     npx rayfin dev --debug
     ```
 
-1. The CLI will print an **Aspire dashboard** URL alongside the backend URLs. Open it in your browser to inspect what the backend is doing as you click around the app. You'll be able to see log traces here, which is super helpful for debugging and understanding how the different services interact.
+1. Open the Aspire dashboard URL printed in the terminal.
+
+1. Leave this terminal running.
 
 ## Task 2: Open the Data API explorer
 
-1. Once `rayfin dev` is up and running, open the URL that was printed by the CLI for local backend in your browser. It should look something like this: `http://localhost:5168`.
+Rayfin generates an API explorer from the data model you reviewed in Exercise 3.
 
-1. This will land you on the **OpenAPI / Swagger UI** for your data API, which was automatically generated from the entities in **rayfin/data/**.
+1. In the browser, open the local backend URL from the `rayfin dev` terminal.
 
-1. Expand the **ServicePro** or **WorkOrder** endpoints. Each entity has auto-generated CRUD operations with validation and authorization rules from your decorator applied.
+    It should look similar to `http://localhost:5168`.
 
-## Task 3: Start the frontend dev server
+1. Confirm that the OpenAPI / Swagger UI page opens.
 
-1. Open a terminal in Visual Studio Code (you can open a new one since the backend is running in the other terminal) and make sure you are in the `field-services-app` folder.
+1. Expand one of these API groups:
 
-1. Start the frontend dev server with the following command:
+    - `ServicePro`
+    - `WorkOrder`
+
+1. Notice that CRUD operations were generated for each entity.
+
+1. Do not edit data from Swagger in this exercise.
+
+## Task 3: Start the frontend
+
+The frontend is the React app that users interact with.
+
+1. Open a second terminal in Visual Studio Code.
+
+1. Make sure this terminal is also in the `field-services-app` folder:
+
+    ```shell
+    cd field-services-app
+    ```
+
+1. Start the frontend dev server:
 
     ```shell
     npm run dev
     ```
 
-1. This will start the Vite dev server and open the app in your default browser at `http://localhost:5173`. Select and open the link in the browser of the VM.
+1. Open the local frontend URL shown in the terminal.
 
-## Task 4: Sign in as a Service Pro and explore the app
+    It should look similar to `http://localhost:5173`.
 
-Locally, Rayfin uses **email + password** auth (in production, the same app uses Microsoft Entra SSO, no code change required).
+1. Confirm that the app sign-in page opens.
 
-1.  On the auth page, switch to **Sign up** and create an account with any email + password.
+## Task 4: Sign up as a Service Pro
 
-1. After sign-in, you land on the **Service Pro view**. Fill in your name and a few skills (for example `painting, hanging, drilling`) and create your profile.
+Local development uses email and password sign-in.
 
-1. You'll see one pre-seeded work order ready to be assigned. **Accept it** and then **mark it complete**.
+1. On the sign-in page, select **Sign up**.
 
-1. You can edit your profile later if needed in the profile view.
+1. Create a test account using an email and password you can remember for this lab.
 
-## Task 5: Sign in as a manager and explore the app
+1. After sign-in, create your Service Pro profile.
 
-The app also has a manager view at **/manager/**. It's not linked from the Service Pro UI on purpose.
+1. Enter your name.
 
-1. In the browser, navigate to `http://localhost:5173/manager/` or add `/manager/` to the URL.
+1. Enter a few skills, such as:
 
-1. The manager view allows you to:
-    - Create new work orders (customer, address, task, scheduled date)
-    - Assign them to a Service Pro
-    - Track status across all jobs
+    ```text
+    painting, hanging, drilling
+    ```
 
-1. Create a couple of new work orders and assign them to your Service Pro account.
+1. Save the profile.
 
-1. Select **Jobs** in the nav bar to switch bar to the service pro view and confirm they show up.
+1. In the **Jobs** view, find an available work order.
 
----
+1. Accept the work order.
 
-## Verify that everything is working correctly
+1. Mark the work order complete.
 
-- The terminal running `rayfin dev` shows all services healthy. You can use `npx rayfin dev status` to check the status of each service at any time.
-- The Swagger UI for your local backend opens in the browser.
-- `http://localhost:5173` shows the auth page.
-- You can sign up, create a Service Pro profile, accept the seeded work order, and create new ones from **/manager/**.
+## Task 5: Explore the manager view
 
-When you're ready to take the app to production, leave the local servers running and head to the next step.
+The same app also includes a manager view.
+
+1. In the browser, go to the manager URL:
+
+    ```text
+    http://localhost:5173/manager/
+    ```
+
+1. Review the manager view.
+
+1. Create a new work order.
+
+1. Assign the work order to your Service Pro profile.
+
+1. Select **Jobs** in the navigation bar.
+
+1. Confirm that the assigned work order appears for the Service Pro.
+
+## Verify Your Setup
+
+Before moving on, confirm that everything is working locally:
+
+- The `rayfin dev` terminal shows the backend services are running.
+- The Data API explorer opens in the browser.
+- The frontend opens at the local Vite URL.
+- You can sign up and create a Service Pro profile.
+- You can accept and complete a work order.
+- You can create and assign a work order from the manager view.
+
+Leave both local servers running for the next exercise.
 
 Next → [5. Deploy to Microsoft Fabric](../instructions/exercise-5-deploy-to-production.md)
