@@ -1,9 +1,11 @@
 import type { ServicePro } from '../../../rayfin/data/ServicePro';
 import type { WorkOrder, WorkOrderStatus } from '../../../rayfin/data/WorkOrder';
+import type { WorkOrderComment } from '../../../rayfin/data/WorkOrderComment';
 import {
   AdminDataSummary,
   FieldServiceSeedDataset,
   IFieldService,
+  NewWorkOrderCommentInput,
   NewWorkOrderInput,
 } from '../interfaces/IFieldService';
 
@@ -33,12 +35,26 @@ const WORK_ORDER_FIELDS = [
   'updatedAt',
 ] as const;
 
+const WORK_ORDER_COMMENT_FIELDS = [
+  'id',
+  'userId',
+  'createdAt',
+  'workOrderId',
+  'content',
+] as const;
+
 type WorkOrderQueryFilter = {
   servicePro_id?: {
     eq?: string;
     isNull?: boolean;
   };
   or?: WorkOrderQueryFilter[];
+};
+
+type WorkOrderCommentQueryFilter = {
+  workOrderId?: {
+    eq?: string;
+  };
 };
 
 const INITIAL_DEMO_ORDER = {
@@ -238,6 +254,24 @@ export class RayfinFieldService implements IFieldService {
     });
   }
 
+  async getCommentsForWorkOrders(
+    workOrderIds: string[]
+  ): Promise<WorkOrderComment[]> {
+    const uniqueWorkOrderIds = [...new Set(workOrderIds)];
+    const commentGroups = await Promise.all(
+      uniqueWorkOrderIds.map((workOrderId) =>
+        this.getCommentsByFilter({ workOrderId: { eq: workOrderId } })
+      )
+    );
+
+    return commentGroups
+      .flat()
+      .sort(
+        (left, right) =>
+          new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime()
+      );
+  }
+
   private async getWorkOrdersByFilter(
     filter?: WorkOrderQueryFilter
   ): Promise<WorkOrder[]> {
@@ -268,6 +302,36 @@ export class RayfinFieldService implements IFieldService {
     return workOrders;
   }
 
+  private async getCommentsByFilter(
+    filter?: WorkOrderCommentQueryFilter
+  ): Promise<WorkOrderComment[]> {
+    const client = getRayfinClient();
+    const comments: WorkOrderComment[] = [];
+    let cursor: string | null = null;
+    let hasNextPage = true;
+
+    while (hasNextPage) {
+      let query = client.data.WorkOrderComment.select(WORK_ORDER_COMMENT_FIELDS)
+        .orderBy({ createdAt: 'asc' })
+        .first(READ_PAGE_SIZE);
+
+      if (filter) {
+        query = query.where(filter);
+      }
+
+      if (cursor) {
+        query = query.after(cursor);
+      }
+
+      const page = await query.executePaginated();
+      comments.push(...page.items);
+      cursor = page.endCursor ?? null;
+      hasNextPage = page.hasNextPage;
+    }
+
+    return comments;
+  }
+
   async createWorkOrder(input: NewWorkOrderInput): Promise<WorkOrder> {
     const client = getRayfinClient();
     const now = new Date();
@@ -281,6 +345,23 @@ export class RayfinFieldService implements IFieldService {
       note: input.note ?? '',
       createdAt: now,
       updatedAt: now,
+    });
+  }
+
+  async createWorkOrderComment(
+    input: NewWorkOrderCommentInput
+  ): Promise<WorkOrderComment> {
+    const content = input.content.trim();
+    if (!content) {
+      throw new Error('Comment content is required.');
+    }
+
+    const client = getRayfinClient();
+    return client.data.WorkOrderComment.create({
+      userId: input.userId,
+      createdAt: new Date(),
+      workOrderId: input.workOrderId,
+      content,
     });
   }
 

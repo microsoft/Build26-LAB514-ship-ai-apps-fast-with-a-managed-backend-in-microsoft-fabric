@@ -2,18 +2,27 @@ import { FormEvent, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BriefcaseBusinessIcon,
+  ChevronDownIcon,
   LayoutDashboardIcon,
   LogOutIcon,
+  MessageSquareIcon,
   RefreshCwIcon,
+  SendIcon,
   UserCircleIcon,
   XIcon,
 } from 'lucide-react';
 
 import type { ServicePro } from '../../rayfin/data/ServicePro';
 import type { WorkOrder, WorkOrderStatus } from '../../rayfin/data/WorkOrder';
+import type { WorkOrderComment } from '../../rayfin/data/WorkOrderComment';
 import { ProfileForm } from '@/components/ProfileForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { useAuth } from '@/hooks/AuthContext';
 import { useFieldService } from '@/hooks/useFieldService';
 
@@ -94,6 +103,107 @@ function getSkillMatches(order: WorkOrder, servicePro: ServicePro): string[] {
 
 function getServicePro(order: WorkOrder, servicePros: ServicePro[]): ServicePro | null {
   return servicePros.find((servicePro) => servicePro.id === order.servicePro_id) ?? null;
+}
+
+function getCommentAuthor(
+  comment: WorkOrderComment,
+  servicePros: ServicePro[],
+  currentUserId?: string
+): string {
+  if (comment.userId === currentUserId) {
+    return 'You';
+  }
+
+  return (
+    servicePros.find((servicePro) => servicePro.user_id === comment.userId)?.name ??
+    'Manager'
+  );
+}
+
+function WorkOrderComments({
+  comments,
+  currentUserId,
+  servicePros,
+  onAddComment,
+}: {
+  comments: WorkOrderComment[];
+  currentUserId?: string;
+  servicePros: ServicePro[];
+  onAddComment: (content: string) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [content, setContent] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      await onAddComment(content);
+      setContent('');
+      setOpen(true);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Collapsible open={open} onOpenChange={setOpen} className="mt-5">
+      <CollapsibleTrigger asChild>
+        <Button type="button" variant="ghost" size="sm" className="gap-2">
+          <MessageSquareIcon className="h-4 w-4" />
+          Comments ({comments.length})
+          <ChevronDownIcon
+            className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
+          />
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="mt-4 rounded-2xl bg-slate-50 p-4">
+          <div className="grid gap-3">
+            {comments.length === 0 ? (
+              <p className="text-sm text-slate-500">
+                No comments yet. Start the intervention history here.
+              </p>
+            ) : (
+              comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="rounded-xl bg-white p-3 text-sm shadow-sm ring-1 ring-slate-200"
+                >
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="font-semibold text-slate-900">
+                      {getCommentAuthor(comment, servicePros, currentUserId)}
+                    </p>
+                    <time className="text-xs text-slate-500">
+                      {formatDate(comment.createdAt)}
+                    </time>
+                  </div>
+                  <p className="mt-2 whitespace-pre-wrap text-slate-700">
+                    {comment.content}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+          <form className="mt-4 grid gap-3" onSubmit={handleSubmit}>
+            <textarea
+              required
+              value={content}
+              maxLength={2000}
+              onChange={(event) => setContent(event.target.value)}
+              className="min-h-24 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm"
+              placeholder="Add an intervention note or question"
+            />
+            <Button type="submit" disabled={saving || !content.trim()}>
+              <SendIcon className="mr-2 h-4 w-4" />
+              {saving ? 'Adding...' : 'Add comment'}
+            </Button>
+          </form>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
 }
 
 function ManagerCreateOrderForm({
@@ -207,21 +317,28 @@ function OrderCard({
   order,
   servicePros,
   profile,
+  comments,
+  currentUserId,
   onAssign,
   onAccept,
   onStatus,
+  onAddComment,
 }: {
   mode: DashboardMode;
   order: WorkOrder;
   servicePros: ServicePro[];
   profile: ServicePro | null;
+  comments: WorkOrderComment[];
+  currentUserId?: string;
   onAssign: (id: string, serviceProId: string | null) => Promise<void>;
   onAccept: (id: string) => Promise<void>;
   onStatus: (id: string, status: WorkOrderStatus) => Promise<void>;
+  onAddComment: (id: string, content: string) => Promise<void>;
 }) {
   const [showDetails, setShowDetails] = useState(false);
   const servicePro = getServicePro(order, servicePros);
   const ownOrder = !!profile && order.servicePro_id === profile.id;
+  const canUseComments = mode === 'manager' || ownOrder;
   const canAccept =
     mode === 'servicePro' &&
     !!profile &&
@@ -355,6 +472,15 @@ function OrderCard({
         </div>
       )}
 
+      {canUseComments && (
+        <WorkOrderComments
+          comments={comments}
+          currentUserId={currentUserId}
+          servicePros={servicePros}
+          onAddComment={(content) => onAddComment(order.id, content)}
+        />
+      )}
+
       {mode === 'servicePro' && (
         <div className="mt-5 flex flex-wrap gap-3">
           {canAccept && (
@@ -417,10 +543,12 @@ export function Dashboard({ mode }: DashboardProps) {
     servicePros,
     profile,
     workOrders,
+    commentsByWorkOrderId,
     loading,
     error,
     createProfile,
     createWorkOrder,
+    addWorkOrderComment,
     assignWorkOrder,
     acceptWorkOrder,
     updateWorkOrderStatus,
@@ -648,9 +776,12 @@ export function Dashboard({ mode }: DashboardProps) {
                   order={order}
                   servicePros={servicePros}
                   profile={profile}
+                  comments={commentsByWorkOrderId[order.id] ?? []}
+                  currentUserId={user?.id}
                   onAssign={assignWorkOrder}
                   onAccept={acceptWorkOrder}
                   onStatus={updateWorkOrderStatus}
+                  onAddComment={addWorkOrderComment}
                 />
               ))}
             </section>

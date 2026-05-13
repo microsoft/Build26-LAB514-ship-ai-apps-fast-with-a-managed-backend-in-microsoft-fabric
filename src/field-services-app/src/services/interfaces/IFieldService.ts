@@ -1,5 +1,6 @@
 import type { ServicePro } from '../../../rayfin/data/ServicePro';
 import type { WorkOrder, WorkOrderStatus } from '../../../rayfin/data/WorkOrder';
+import type { WorkOrderComment } from '../../../rayfin/data/WorkOrderComment';
 
 export interface FieldServiceSeedProfile {
   seedId: string;
@@ -41,6 +42,12 @@ export interface NewWorkOrderInput {
   note?: string;
 }
 
+export interface NewWorkOrderCommentInput {
+  workOrderId: string;
+  userId: string;
+  content: string;
+}
+
 export interface IFieldService {
   bootstrapDemoData(): Promise<void>;
   getDataSummary(): Promise<AdminDataSummary>;
@@ -52,7 +59,11 @@ export interface IFieldService {
   updateProfile(id: string, name: string, skills: string): Promise<ServicePro>;
   getWorkOrders(): Promise<WorkOrder[]>;
   getWorkOrdersForServicePro(serviceProId: string): Promise<WorkOrder[]>;
+  getCommentsForWorkOrders(workOrderIds: string[]): Promise<WorkOrderComment[]>;
   createWorkOrder(input: NewWorkOrderInput): Promise<WorkOrder>;
+  createWorkOrderComment(
+    input: NewWorkOrderCommentInput
+  ): Promise<WorkOrderComment>;
   assignWorkOrder(id: string, serviceProId: string | null): Promise<WorkOrder>;
   acceptWorkOrder(id: string, serviceProId: string): Promise<WorkOrder>;
   updateWorkOrderStatus(id: string, status: WorkOrderStatus): Promise<WorkOrder>;

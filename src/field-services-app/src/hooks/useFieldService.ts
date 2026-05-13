@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { ServicePro } from '../../rayfin/data/ServicePro';
 import type { WorkOrder, WorkOrderStatus } from '../../rayfin/data/WorkOrder';
+import type { WorkOrderComment } from '../../rayfin/data/WorkOrderComment';
 import { AuthUser } from '../services/interfaces/IAuthService';
 import { NewWorkOrderInput } from '../services/interfaces/IFieldService';
 import { ServiceContainer } from '../services/ServiceContainer';
@@ -12,11 +13,13 @@ interface UseFieldServiceResult {
   servicePros: ServicePro[];
   profile: ServicePro | null;
   workOrders: WorkOrder[];
+  commentsByWorkOrderId: Record<string, WorkOrderComment[]>;
   loading: boolean;
   error: string | null;
   createProfile: (name: string, skills: string) => Promise<void>;
   updateProfile: (name: string, skills: string) => Promise<void>;
   createWorkOrder: (input: NewWorkOrderInput) => Promise<void>;
+  addWorkOrderComment: (workOrderId: string, content: string) => Promise<void>;
   assignWorkOrder: (id: string, serviceProId: string | null) => Promise<void>;
   acceptWorkOrder: (id: string) => Promise<void>;
   updateWorkOrderStatus: (id: string, status: WorkOrderStatus) => Promise<void>;
@@ -27,6 +30,9 @@ export function useFieldService(mode: Mode, user: AuthUser | null): UseFieldServ
   const [servicePros, setServicePros] = useState<ServicePro[]>([]);
   const [profile, setProfile] = useState<ServicePro | null>(null);
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
+  const [commentsByWorkOrderId, setCommentsByWorkOrderId] = useState<
+    Record<string, WorkOrderComment[]>
+  >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,6 +52,7 @@ export function useFieldService(mode: Mode, user: AuthUser | null): UseFieldServ
         if (!nextProfile) {
           setServicePros([]);
           setWorkOrders([]);
+          setCommentsByWorkOrderId({});
           return;
         }
 
@@ -53,8 +60,13 @@ export function useFieldService(mode: Mode, user: AuthUser | null): UseFieldServ
           service.getServicePros(),
           service.getWorkOrdersForServicePro(nextProfile.id),
         ]);
+        const assignedOrderIds = nextWorkOrders
+          .filter((order) => order.servicePro_id === nextProfile.id)
+          .map((order) => order.id);
+        const nextComments = await service.getCommentsForWorkOrders(assignedOrderIds);
         setServicePros(nextServicePros);
         setWorkOrders(nextWorkOrders);
+        setCommentsByWorkOrderId(groupCommentsByWorkOrderId(nextComments));
         return;
       }
 
@@ -62,8 +74,12 @@ export function useFieldService(mode: Mode, user: AuthUser | null): UseFieldServ
         service.getServicePros(),
         service.getWorkOrders(),
       ]);
+      const nextComments = await service.getCommentsForWorkOrders(
+        nextWorkOrders.map((order) => order.id)
+      );
       setServicePros(nextServicePros);
       setWorkOrders(nextWorkOrders);
+      setCommentsByWorkOrderId(groupCommentsByWorkOrderId(nextComments));
       setProfile(null);
     } catch (err) {
       const message =
@@ -136,6 +152,40 @@ export function useFieldService(mode: Mode, user: AuthUser | null): UseFieldServ
     [refresh, service]
   );
 
+  const addWorkOrderComment = useCallback(
+    async (workOrderId: string, content: string) => {
+      if (!user) {
+        throw new Error('You must sign in before adding comments.');
+      }
+
+      const workOrder = workOrders.find((order) => order.id === workOrderId);
+      if (!workOrder) {
+        throw new Error('Work order not found.');
+      }
+
+      if (mode === 'servicePro' && workOrder.servicePro_id !== profile?.id) {
+        throw new Error('Only the assigned Service Pro can comment on this work order.');
+      }
+
+      setError(null);
+      try {
+        await service.createWorkOrderComment({
+          workOrderId,
+          userId: user.id,
+          content,
+        });
+        await refresh();
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Failed to add work order comment.';
+        console.error('Failed to add work order comment:', err);
+        setError(message);
+        throw err;
+      }
+    },
+    [mode, profile, refresh, service, user, workOrders]
+  );
+
   const assignWorkOrder = useCallback(
     async (id: string, serviceProId: string | null) => {
       setError(null);
@@ -196,14 +246,26 @@ export function useFieldService(mode: Mode, user: AuthUser | null): UseFieldServ
     servicePros,
     profile,
     workOrders,
+    commentsByWorkOrderId,
     loading,
     error,
     createProfile,
     updateProfile,
     createWorkOrder,
+    addWorkOrderComment,
     assignWorkOrder,
     acceptWorkOrder,
     updateWorkOrderStatus,
     refresh,
   };
+}
+
+function groupCommentsByWorkOrderId(
+  comments: WorkOrderComment[]
+): Record<string, WorkOrderComment[]> {
+  return comments.reduce<Record<string, WorkOrderComment[]>>((groups, comment) => {
+    groups[comment.workOrderId] ??= [];
+    groups[comment.workOrderId].push(comment);
+    return groups;
+  }, {});
 }
