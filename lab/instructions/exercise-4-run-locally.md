@@ -65,7 +65,7 @@ The auth page shows a **"Sign in with Microsoft Fabric"** button — the backend
 1. Select the **"Sign in with Microsoft Fabric"** button. Use the same Microsoft Fabric account you signed in with in Exercise 1:
 
     - **Email**: `@lab.CloudPortalCredential(User1).Username`
-    - **Password**: `@lab.CloudPortalCredential(User1).Password`
+    - **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
 
 1. After sign-in, create your Service Pro profile.
 

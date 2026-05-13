@@ -16,7 +16,7 @@ What you've been testing locally with `npm run dev` is the same backend, same da
 1. Select **Sign in with Microsoft Fabric**. If asked, use the same credentials as before:
 
     - **Email**: `@lab.CloudPortalCredential(User1).Username`
-    - **Password**: `@lab.CloudPortalCredential(User1).Password`
+    - **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
 
 1. You land in the Service Pro view, with the same profile and the same work orders you created earlier in the previous exercise. It's literally the same data, served from the same database.
 
