@@ -8,6 +8,8 @@ What you've been testing locally with `npm run dev` is the same backend, same da
 
 Look at the output of the previous `npx rayfin up` and find the **hosting URL** the CLI printed (it looks like `https://<random-prefix>.webapp.rayfin….com`).
 
+![Rayfin up command output](../../img/rayfin-up.png)
+
 If you missed it, run:
 
 ```sh
