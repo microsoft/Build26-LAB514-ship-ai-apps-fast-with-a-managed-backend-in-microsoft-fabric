@@ -6,7 +6,6 @@ This lab uses a pre-configured virtual machine with all necessary tools installe
 
 - Node.js 24
 - npm
-- Docker Desktop
 - Visual Studio Code
 - GitHub Copilot CLI
 
@@ -103,12 +102,6 @@ node --version
 
 ```shell
 npm --version
-```
-
-1. To verify that you have docker installed and running, run the following command:
-
-```shell
-docker --version
 ```
 
 1. To verify that you have GitHub Copilot CLI installed and running, run the following command:

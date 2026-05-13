@@ -6,15 +6,9 @@ The template handles the setup for you, so you can focus on the lab.
 > [!Tip]
 > In this lab environment, the template is available locally at `C:\LabFiles\template\field-services-app`. The `rayfin` CLI knows how to find it by name.
 
-## Task 1: Open a working folder
+## Task 1: Bootstrap a new Rayfin project from the Field Services template
 
-1. In Visual Studio Code, select **File** > **Open Folder** from the menu, and create a new folder named `lab514-@lab.LabInstance.id` on the VM desktop. Select this folder and press **Select Folder** to open it in Visual Studio Code.
-
-1. Once the folder is open, you may be prompted to trust the authors of the files in this folder. Choose **Yes, I trust the authors**.
-
-1. Open a new terminal in Visual Studio Code by selecting **View** > **Terminal** from the toolbar.
-
-## Task 2: Bootstrap a new Rayfin project from the Field Services template
+1. Open a terminal in Visual Studio Code by selecting **View** > **Terminal** from the toolbar.
 
 1. Type/Add the following command into the terminal, but do not press **Enter** yet. Leave `<workspace-uri>` in place for now.
 
@@ -31,13 +25,14 @@ The template handles the setup for you, so you can focus on the lab.
 1. Return to the terminal. In the command you pasted, replace `<workspace-uri>` with the Fabric workspace URL you just copied, then press **Enter** to bootstrap a new Rayfin project from the Field Services template.
 
 1. When prompted, type `y` and press **Enter** to approve the installation of the npm packages. The CLI will then:
+    - Create a new folder called `field-services-app` in your current directory.
     - Copy the template files into a new `field-services-app` folder.
     - Wire the project to your Fabric workspace using the `--workspace-uri` you provided.
     - Run `npm install` in the new project folder to pull dependencies (this can take a couple of minutes on first run).
 
 1. As this is running, open the `/data` folder at *C:\LabFiles\template\field-services-app* to see the original prompt and dataset used to generate this template. This will give you a better understanding of how the app was built and ideas on how to customize it later in the lab.
 
-## Task 3: Explore the generated project and make your first commit
+## Task 2: Explore the generated project and make your first commit
 
 In this task, you will inspect the generated project, initialize a Git repository, and make your first commit. This is important for GitHub Copilot CLI in later exercises, as it will show you clean diffs and what it will be changing when you ask it to generate code.
 
@@ -48,13 +43,15 @@ In this task, you will inspect the generated project, initialize a Git repositor
     - `src/`: React + TypeScript frontend
     - `rayfin/`: Rayfin backend configuration (`rayfin.yml`, data entities)
     - `data/`: Seed data and **the original prompt + dataset used to generate this template** (worth a look if you're curious how it was built)
-    - `package.json`: Dependencies and scripts for the project, including `rayfin:dev`, `rayfin:db`, and `dev`.
+    - `package.json`: Dependencies and scripts for the project, including `build` and `dev`.
 
-1. In the Visual Studio Code terminal, move into the generated project folder:
+1. In the terminal, run this command to open the new generated project:
 
     ```shell
-    cd field-services-app
+    code field-services-app
     ```
+
+1. You can now close the previous VS Code window, as we won't be using it anymore. In the new VS Code window that you opened with the project, open the terminal.
 
 1. Run this command to initialize a new Git repository:
 

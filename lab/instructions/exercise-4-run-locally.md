@@ -2,108 +2,55 @@
 
 In this exercise, you will run the Field Services app locally.
 
-You will start:
+You will:
 
-- the Rayfin backend
-- the Data API explorer
-- the React frontend
-
+- **Provision a Fabric backend** for the app with one command
+- Start the **frontend dev server** locally
 Then you will sign in, create a Service Pro profile, complete a work order, and test the manager view.
 
-> [!Tip]
-> Keep two terminals open: one for the Rayfin backend and one for the frontend.
 
-## Task 1: Start the Rayfin backend
 
-The backend runs the local Rayfin services for this app.
+## Task 1: Provision the Fabric backend
+
+The `rayfin up` command provisions a managed backend (database, auth, data API) in your Fabric workspace and wires your local frontend to talk to it.
 
 1. Use the terminal from the previous exercise. It should already be in the `field-services-app` folder.
 
-    > [!Tip]
-    > If you closed the terminal, open a new one and move into the project folder:
+
+
+1. Provision the Fabric backend by running:
 
     ```shell
-    cd field-services-app
+    npx rayfin up
     ```
 
-1. Start the local Rayfin backend:
+1. As this is your first time deploying, the CLI will:
 
-    ```shell
-    npx rayfin dev
-    ```
+    - Open a browser to sign you in to Microsoft Entra (use the same Microsoft Fabric account you used in Exercise 1).
+    - **Create a Fabric App item** in the workspace you wired up at bootstrap.
+    - **Provision a managed SQL database** for your data model.
+    - **Apply your schema** to that database.
+    - **Generate a publishable key** for the new backend.
+    - **Wire your frontend** to the new backend by writing the connection details and key into `.env.local` and `rayfin/.env`.
 
-1. Wait for the services to finish starting.
+1. Watch the terminal for progress on each step. The first run takes a couple of minutes.
 
-1. Watch for the local backend URL in the terminal output.
-
-    It should look similar to `http://localhost:5168`.
-
-1. Leave this terminal running.
-
-    The frontend needs the backend to stay online.
+1. When the command finishes, the CLI prints the deployment details, including the backend URL.
 
 > [!Tip]
-> On the first run, Rayfin may take a few minutes to start Docker containers and apply the data model.
-> If Rayfin reports a Docker error, make sure Docker Desktop is running.
+> The CLI saves the deployment details to `rayfin/.deployments.json` so subsequent `rayfin up` runs update the same deployment instead of creating a new one.
 
-## Task 1.1 (Optional): Open the Aspire dashboard
-
-The Aspire dashboard shows service health, logs, and traces.
-
-Only do this task if your instructor asks you to use the dashboard.
-
-1. Stop the local backend:
-
-    ```shell
-    npx rayfin dev --down
-    ```
-
-1. Restart the backend with debug output:
-
-    ```shell
-    npx rayfin dev --debug
-    ```
-
-1. Open the Aspire dashboard URL printed in the terminal.
-
-1. Leave this terminal running.
-
-## Task 2: Open the Data API explorer
-
-Rayfin generates an API explorer from the data model you reviewed in Exercise 3.
-
-1. In the browser, open the local backend URL from the `rayfin dev` terminal.
-
-    It should look similar to `http://localhost:5168`.
-
-1. Confirm that the OpenAPI / Swagger UI page opens.
-
-1. Expand one of these API groups:
-
-    - `ServicePro`
-    - `WorkOrder`
-
-1. Notice that CRUD operations were generated for each entity.
-
-1. Do not edit data from Swagger in this exercise.
-
-## Task 3: Start the frontend
+## Task 2: Start the frontend
 
 The frontend is the React app that users interact with.
 
-1. Open a second terminal in Visual Studio Code.
-
-1. Make sure this terminal is also in the `field-services-app` folder:
-
-    ```shell
-    cd field-services-app
-    ```
-
-1. Start the frontend dev server:
+1. In the same terminal, start the Vite dev server:
 
     ```shell
     npm run dev
     ```
+
+    Because `rayfin up` already wrote the backend URL and publishable key into `.env.local`, Vite picks them up automatically. Your locally-served frontend talks to the freshly provisioned Fabric backend with no extra configuration.
 
 1. Open the local frontend URL shown in the terminal.
 
@@ -111,13 +58,14 @@ The frontend is the React app that users interact with.
 
 1. Confirm that the app sign-in page opens.
 
-## Task 4: Sign up as a Service Pro
+## Task 3: Sign up as a Service Pro
 
-Local development uses email and password sign-in.
+The auth page shows a **"Sign in with Microsoft Fabric"** button — the backend authenticates against Microsoft Entra (Fabric SSO).
 
-1. On the sign-in page, select **Sign up**.
+1. Select the **"Sign in with Microsoft Fabric"** button. Use the same Microsoft Fabric account you signed in with in Exercise 1:
 
-1. Create a test account using an email and password you can remember for this lab.
+    - **Email**: `@lab.CloudPortalCredential(User1).Username`
+    - **Password**: `@lab.CloudPortalCredential(User1).Password`
 
 1. After sign-in, create your Service Pro profile.
 
@@ -137,7 +85,7 @@ Local development uses email and password sign-in.
 
 1. Mark the work order complete.
 
-## Task 5: Explore the manager view
+## Task 4: Explore the manager view
 
 The same app also includes a manager view.
 
@@ -159,15 +107,13 @@ The same app also includes a manager view.
 
 ## Verify Your Setup
 
-Before moving on, confirm that everything is working locally:
+Before moving on, confirm that everything is working:
 
-- The `rayfin dev` terminal shows the backend services are running.
-- The Data API explorer opens in the browser.
-- The frontend opens at the local Vite URL.
-- You can sign up and create a Service Pro profile.
-- You can accept and complete a work order.
-- You can create and assign a work order from the manager view.
+- `rayfin up` finished without errors and printed a hosting URL and publishable key.
+- The frontend opens at `http://localhost:5173` and shows the **Sign in with Microsoft Fabric** button.
+- You can sign up, create a Service Pro profile, accept the seeded work order, and create new ones from `/manager/`.
 
-Leave both local servers running for the next exercise.
+Leave the frontend dev server running for the next exercise.
 
 Next → [5. Deploy to Microsoft Fabric](../instructions/exercise-5-deploy-to-production.md)
+
