@@ -65,13 +65,6 @@ In this task, you will inspect the generated project, initialize a Git repositor
     git add .
     ```
 
-1. Configure your Git identity so Git can create the commit:
-
-    ```shell
-    git config --global user.email '@lab.CloudPortalCredential(User1).Username'
-    git config --global user.name '@lab.CloudPortalCredential(User1).Username'
-    ```
-
 1. Finally, make your first commit with this command:
 
     ```shell
