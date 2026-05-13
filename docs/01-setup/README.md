@@ -11,7 +11,6 @@ Every tool and account needed is already installed in this guided lab, but here'
 |---|---|---|
 | **Node.js 24+** | ✅ Pre-installed | Install from [nodejs.org](https://nodejs.org/) (LTS or current ≥ 24) |
 | **npm** | ✅ Pre-installed | Bundled with Node.js |
-| **Docker Desktop** | ✅ Pre-installed | Install from [docker.com](https://www.docker.com/products/docker-desktop/) and make sure it's running before you start the lab |
 | **Visual Studio Code** | ✅ Pre-installed | Install from [code.visualstudio.com](https://code.visualstudio.com/) |
 | **GitHub Copilot CLI** | ✅ Pre-installed | Run `npm install -g @github/copilot` |
 | **GitHub account with Copilot access** | Use the lab account | Use your own GitHub account with an active Copilot subscription |
@@ -20,16 +19,7 @@ Every tool and account needed is already installed in this guided lab, but here'
 > [!TIP]
 > Even on the Skillable VM you still need to **sign in** to each service below.
 
-## 1. Start Docker Desktop
-
-The local tools we'll use runs in containers, so Docker needs to be up before you can test the app later.
-
-On the desktop, double-click the **Docker Desktop** icon to start it, and keep it running in the background for the rest of the lab.
-
-> [!TIP]
-> You can leave Docker starting in the background and continue with the next sign-in steps.
-
-## 2. Sign in to GitHub through the lab SSO portal
+## 1. Sign in to GitHub through the lab SSO portal
 
 The lab uses a GitHub Enterprise SSO portal to grant access to GitHub Copilot.
 
@@ -43,7 +33,7 @@ The lab uses a GitHub Enterprise SSO portal to grant access to GitHub Copilot.
 
 3. Once you're signed in, **keep this browser tab open** — Visual Studio Code will use this active session in the next step.
 
-## 3. Sign in to GitHub Copilot in Visual Studio Code
+## 2. Sign in to GitHub Copilot in Visual Studio Code
 
 1. Open Visual Studio Code.
 2. Click the **Copilot** icon at the bottom-left of the window and choose **Sign in to use AI Features**.
@@ -52,7 +42,7 @@ The lab uses a GitHub Enterprise SSO portal to grant access to GitHub Copilot.
 4. Complete the browser flow using the SSO session you opened in the previous step.
 5. Confirm the Copilot icon appears in the status bar with no error indicator.
 
-## 4. Sign in to GitHub Copilot CLI
+## 3. Sign in to GitHub Copilot CLI
 
 The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
 
@@ -71,7 +61,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
    ```
 
 5. When asked which account to sign in with, choose **GitHub.com**.
-6. The CLI will display a device code and a URL. Copy the code, open the URL in your browser, paste the code, and complete the device authorization flow using the SSO session from Step 2.
+6. The CLI will display a device code and a URL. Copy the code, open the URL in your browser, paste the code, and complete the device authorization flow using the SSO session from Step 1.
 7. *(Optional)* If the Copilot CLI prompts you that an update is available, run:
 
    ```
@@ -81,7 +71,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
    to make sure you're on the latest version.
 8. Once you see the signed-in confirmation in the CLI, type `/exit` (or press `Ctrl+C`) to leave the prompt. 
 
-## 5. Sign in to Microsoft Fabric
+## 4. Sign in to Microsoft Fabric
 
 1. In a browser, open <[https://app.fabric.microsoft.com](https://app.fabric.microsoft.com).
 2. Sign in with these **Azure credentials**:
@@ -89,7 +79,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
     - Temporary Access Pass: `@lab.CloudPortalCredential(User1).AccessToken`
 3. Confirm the Fabric portal loads.
 
-## 6. Create a Fabric workspace and assign capacity
+## 5. Create a Fabric workspace and assign capacity
 
 The lab deploys your app to a Microsoft Fabric workspace, which must be backed by a Fabric capacity.
 
@@ -107,12 +97,11 @@ You'll deploy into this workspace later in the lab.
 
 ## ✅ Verify your setup
 
-Back in the Visual Studio Code terminal you opened in Step 4, run these commands. All should succeed:
+Back in the Visual Studio Code terminal you opened in Step 3, run these commands. All should succeed:
 
 ```sh
 node --version          # v24.x.x
 npm --version           # 10.x or newer
-docker --version        # Docker version 24+ (and `docker ps` works)
 copilot --version       # GitHub Copilot CLI version
 ```
 

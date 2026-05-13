@@ -4,7 +4,7 @@
 In this step you'll scaffold a brand-new project using Rayfin SDK using the **Field Services** template. Bootstrapping from a template saves time so we can focus on the interesting parts of the lab, but this app was originally generated using the **GitHub Copilot CLI template from the Rayfin CLI**. If you're curious, after the project is scaffolded you can look in the `/data` folder of the new project to see the original prompt and dataset that were used to generate it.
 
 ## What is Rayfin?
-Rayfin is the SDK and CLI behind **Fabric Apps** — Microsoft Fabric's managed backend for full-stack apps. The **Rayfin SDK** is a set of TypeScript libraries: you describe your data model with decorators (`@entity`, `@uuid`, `@text`, `@one`…), and the SDK generates a typed client, a managed database schema, authentication, storage, and an HTTP/GraphQL API for you. The **Rayfin CLI** is the command-line tool that wires it all together: scaffold a project, run it locally in Docker, apply schema changes, and deploy to a Fabric workspace. Together, they let you go from data model to a deployed full-stack app without writing infrastructure, migrations, or auth plumbing yourself.
+Rayfin is the SDK and CLI behind **Fabric Apps** — Microsoft Fabric's managed backend for full-stack apps. The **Rayfin SDK** is a set of TypeScript libraries: you describe your data model with decorators (`@entity`, `@uuid`, `@text`, `@one`…), and the SDK generates a typed client, a managed database schema, authentication, storage, and an HTTP/GraphQL API for you. The **Rayfin CLI** is the command-line tool that wires it all together: scaffold a project, provision a managed Fabric backend, apply schema changes, and deploy to a Fabric workspace. Together, they let you go from data model to a deployed full-stack app without writing infrastructure, migrations, or auth plumbing yourself.
 
 ---
 
@@ -29,14 +29,7 @@ You previously created a Fabric workspace. The bootstrap command needs that work
 
 ## 3. Scaffold the project
 
-In the Visual Studio Code terminal, create a new folder with:
-
-```sh
-mkdir field-services-app
-cd field-services-app
-```
-
-Then run this command (replace `<workspace-uri>` with the URL you just copied):
+In the Visual Studio Code terminal, run this command (replace `<workspace-uri>` with the URL you just copied):
 
 ```sh
 npm create @microsoft/rayfin@latest -- --project-name field-services-app --template "C:/LabFiles/template/field-services-app" --workspace-uri <workspace-uri>
@@ -53,7 +46,7 @@ The CLI will:
 Once the scaffolding finishes, open the new project in Visual Studio Code:
 
 ```sh
-code .
+code field-services-app
 ```
 
 You should see a folder structure that includes:

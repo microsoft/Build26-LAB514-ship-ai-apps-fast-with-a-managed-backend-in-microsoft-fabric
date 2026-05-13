@@ -74,22 +74,33 @@ Expect to see at least:
 > [!NOTE]
 > **What you didn't have to do:** write a migration, hand-roll an API endpoint, build a REST client, wire up authorization middleware. The decorators + the typed client + the Copilot skill cover all of that for you.
 
-## 5. Apply the schema locally and try it
+## 5. Apply the schema and try it
 
-We asked the agent **not** to run any database changes, so the new **Comment** entity exists only in TypeScript at this point. To actually try the feature in the browser, you need to apply the schema to your local database.
+We asked the agent **not** to run any database changes, so the new **Comment** entity exists only in TypeScript at this point. To actually try the feature in the browser, you need to push the schema to your Fabric backend.
 
-In the terminal where you ran `rayfin dev`, apply the schema:
+In a terminal in your project folder, run:
 
 ```sh
-npx rayfin dev db apply
+npx rayfin up db apply
 ```
 
-This compiles the decorators in `rayfin/data/` to a database migration and applies it to the local SQL database. You should see a confirmation that the new `Comment` table was created.
+This compiles the decorators in `rayfin/data/` to a database migration and applies it to the Fabric SQL database. You should see a confirmation that the new `Comment` table was created.
 
-> [!TIP]
-> If you'd rather use the project's npm script: `npm run rayfin:db` does the same thing.
+> [!alert]
+> If `rayfin up db apply` warns about destructive changes (dropping or renaming columns), review the listed operations carefully before re-running with `--force`. Adding a new entity or new optional fields should not trigger this warning.
 
-Now switch back to the frontend tab in your browser. If the new UI doesn't show up, restart the Vite dev server, in the terminal where `npm run dev` was running, stop it (`Ctrl+C`) and start it again:
+You now also need to update the backend APIs with the new schema and entities, so run:
+
+```sh
+npx rayfin up
+```
+
+Note that runs the full deplyment flow, that also includes by default applying any DB migrations (that we did in the previous step). So it's not mandatory to run both `npx rayfin up db apply` and `npx rayfin up`, but sometimes it may be helpful to run them separately.
+
+Now switch back to the frontend tab in your browser. If the new UI doesn't show up, restart the Vite dev server: in the terminal where `npm run dev` was running, stop it (`Ctrl+C`) and start it again:
+
+
+
 
 ```sh
 npm run dev
@@ -119,7 +130,8 @@ The agent applies refinements with the same project context, so you stay in flow
 ## ✅ Verify
 
 - A new `Comment` entity exists in `rayfin/data/` and is exported from `schema.ts`.
-- `npx rayfin dev db apply` succeeded and the local schema now includes the **Comment** table.
-- The work-order UI has a **collapsible Comments section** (folded by default), and you can post comments end-to-end as a service pro and the manager.
+- `npx rayfin up db apply` succeeded and the Fabric backend now includes the **Comment** table.
+- `npx rayfin up` finished without errors and uploaded the updated frontend.
+- The work-order UI has a **collapsible Comments section** (folded by default), and you can post comments end-to-end as a service pro and the manager — both at `localhost:5173` and at the live hosting URL.
 
-You've added a new schema-backed feature locally. Next, let's push it to production.
+You've shipped a real schema-backed feature end-to-end with two commands. 🎉 Next, let's seed the database with realistic data so we have something interesting to query in the next part.

@@ -27,7 +27,7 @@ The scenario centers on Contoso DIY, a home-improvement retailer expanding into 
 Through the exercises, you'll explore how Contoso DIY:
 
 - Bootstraps a production-ready field-services app from a template and uses Fabric Apps and Rayfin SDK to model service pros, work orders, authentication, data, and hosting declaratively
-- Runs a full local backend with Docker and validates the generated API, then deploys the same app to Microsoft Fabric with managed hosting and single sign-on
+- Provisions a managed Fabric backend with a SQL database, authentication, and static hosting from day one — no infrastructure scripts, no migrations to write by hand
 - Uses GitHub Copilot CLI and the Rayfin agent skill to add features across the schema and user interface, applying schema changes locally and in production without hand-writing migrations
 - Seeds the deployed app with realistic data and uses Microsoft Fabric intelligence, semantic models, and data agents to ask natural-language questions about operational data
 
@@ -49,7 +49,6 @@ Every tool and account needed is already installed in this guided lab, but here'
 |---|---|---|
 | **Node.js 24+** | ✅ Pre-installed | Install from [nodejs.org](https://nodejs.org/) (LTS or current ≥ 24) |
 | **npm** | ✅ Pre-installed | Bundled with Node.js |
-| **Docker Desktop** | ✅ Pre-installed | Install from [docker.com](https://www.docker.com/products/docker-desktop/) and make sure it's running before you start the lab |
 | **Visual Studio Code** | ✅ Pre-installed | Install from [code.visualstudio.com](https://code.visualstudio.com/) |
 | **GitHub Copilot CLI** | ✅ Pre-installed | Run `npm install -g @github/copilot` |
 | **GitHub account with Copilot access** | Use the lab account | Use your own GitHub account with an active Copilot subscription |
@@ -59,16 +58,7 @@ Every tool and account needed is already installed in this guided lab, but here'
 > Even on the Skillable VM you still need to **sign in** to each service below.
 
 
-## 1. Start Docker Desktop
-
-The local tools we'll use runs in containers, so Docker needs to be up before you can test the app later.
-
-On the desktop, double-click the **Docker Desktop** icon to start it, and keep it running in the background for the rest of the lab.
-
-> [!TIP]
-> You can leave Docker starting in the background and continue with the next sign-in steps.
-
-## 2. Sign in to GitHub through the lab SSO portal
+## 1. Sign in to GitHub through the lab SSO portal
 
 The lab uses a GitHub Enterprise SSO portal to grant access to GitHub Copilot.
 
@@ -82,7 +72,7 @@ The lab uses a GitHub Enterprise SSO portal to grant access to GitHub Copilot.
 
 3. Once you're signed in, **keep this browser tab open** — Visual Studio Code will use this active session in the next step.
 
-## 3. Sign in to GitHub Copilot in Visual Studio Code
+## 2. Sign in to GitHub Copilot in Visual Studio Code
 
 1. Open Visual Studio Code.
 2. Click the **Copilot** icon at the bottom-left of the window and choose **Sign in to use AI Features**.
@@ -91,7 +81,7 @@ The lab uses a GitHub Enterprise SSO portal to grant access to GitHub Copilot.
 4. Complete the browser flow using the SSO session you opened in the previous step.
 5. Confirm the Copilot icon appears in the status bar with no error indicator.
 
-## 4. Sign in to GitHub Copilot CLI
+## 3. Sign in to GitHub Copilot CLI
 
 The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
 
@@ -110,7 +100,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
    ```
 
 5. When asked which account to sign in with, choose **GitHub.com**.
-6. The CLI will display a device code and a URL. Copy the code, open the URL in your browser, paste the code, and complete the device authorization flow using the SSO session from Step 2.
+6. The CLI will display a device code and a URL. Copy the code, open the URL in your browser, paste the code, and complete the device authorization flow using the SSO session from Step 1.
 7. *(Optional)* If the Copilot CLI prompts you that an update is available, run:
 
    ```
@@ -120,7 +110,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
    to make sure you're on the latest version.
 8. Once you see the signed-in confirmation in the CLI, type `/exit` (or press `Ctrl+C`) to leave the prompt. 
 
-## 5. Sign in to Microsoft Fabric
+## 4. Sign in to Microsoft Fabric
 
 1. In a browser, open [https://app.fabric.microsoft.com](https://app.fabric.microsoft.com).
 2. Sign in with these **Azure credentials**:
@@ -128,7 +118,7 @@ The GitHub Copilot CLI uses its own sign-in, separate from Visual Studio Code.
     - Temporary Access Pass: `@lab.CloudPortalCredential(User1).AccessToken`
 3. Confirm the Fabric portal loads.
 
-## 6. Create a Fabric workspace and assign capacity
+## 5. Create a Fabric workspace and assign capacity
 
 The lab deploys your app to a Microsoft Fabric workspace, which must be backed by a Fabric capacity.
 
@@ -146,12 +136,11 @@ You'll deploy into this workspace in later in the lab.
 
 ## ✅ Verify your setup
 
-Back in the Visual Studio Code terminal you opened in Step 4, run these commands. All should succeed:
+Back in the Visual Studio Code terminal you opened in Step 3, run these commands. All should succeed:
 
 ```sh
 node --version          # v24.x.x
 npm --version           # 10.x or newer
-docker --version        # Docker version 24+ (and `docker ps` works)
 copilot --version       # GitHub Copilot CLI version
 ```
 
@@ -166,7 +155,7 @@ Select **Next →** to start the first exercise.
 In this step you'll scaffold a brand-new project using Rayfin SDK using the **Field Services** template. Bootstrapping from a template saves time so we can focus on the interesting parts of the lab, but this app was originally generated using the **GitHub Copilot CLI template from the Rayfin CLI**. If you're curious, after the project is scaffolded you can look in the `/data` folder of the new project to see the original prompt and dataset that were used to generate it.
 
 ## What is Rayfin?
-Rayfin is the SDK and CLI behind **Fabric Apps** — Microsoft Fabric's managed backend for full-stack apps. The **Rayfin SDK** is a set of TypeScript libraries: you describe your data model with decorators (`@entity`, `@uuid`, `@text`, `@one`…), and the SDK generates a typed client, a managed database schema, authentication, storage, and an HTTP/GraphQL API for you. The **Rayfin CLI** is the command-line tool that wires it all together: scaffold a project, run it locally in Docker, apply schema changes, and deploy to a Fabric workspace. Together, they let you go from data model to a deployed full-stack app without writing infrastructure, migrations, or auth plumbing yourself.
+Rayfin is the SDK and CLI behind **Fabric Apps** — Microsoft Fabric's managed backend for full-stack apps. The **Rayfin SDK** is a set of TypeScript libraries: you describe your data model with decorators (`@entity`, `@uuid`, `@text`, `@one`…), and the SDK generates a typed client, a managed database schema, authentication, storage, and an HTTP/GraphQL API for you. The **Rayfin CLI** is the command-line tool that wires it all together: scaffold a project, provision a managed Fabric backend, apply schema changes, and deploy to a Fabric workspace. Together, they let you go from data model to a deployed full-stack app without writing infrastructure, migrations, or auth plumbing yourself.
 
 ---
 
@@ -424,72 +413,57 @@ Continue with **Next →** to run the app locally.
 
 ===
 
-# Run the app locally
+# Run the app
 
-Now that you've toured the project, let's see it running. You'll start the **Rayfin backend** (database, auth, data API) locallt, then the **frontend dev server**, and finally walk through the app's two views as a Service Pro and as a manager.
+Now that you've toured the project, let's see it running. You'll **provision a Fabric backend** for the app with one command, then start the **frontend dev server**, and walk through the app's two views as a Service Pro and as a manager.
 
-> [!TIP]
-> The local backend is a full Rayfin environment running in Docker on your machine — same shape as production, just running locally.
+> [!NOTE]
+> Rayfin can also run a full local backend in Docker, but for this lab we'll skip Docker entirely and use a Fabric-hosted backend from the start. The frontend still runs locally with Vite — only the database, auth, and API live remotely.
 
-## 1. Start the Rayfin backend
+## 1. Provision the Fabric backend
 
 In the Visual Studio Code terminal, from your project folder, run:
 
 ```sh
-npx rayfin dev
+npx rayfin up --encryption-fallback-enabled
 ```
 
-This will:
+If this is the first time you run `rayfin up` on this machine, the CLI will open a browser to sign you in to Microsoft Entra (use the same account you used for the Fabric portal in the setup step). Then it will:
 
-- Start Docker containers for every service enabled in `rayfin/rayfin.yml` (database, auth, data API).
-- Run health checks until everything is ready.
-- **Auto-apply your data model** to the local database (you don't need a separate `db apply` on first run).
+- **Create a Fabric App item** in the workspace you wired up at bootstrap.
+- **Provision a managed SQL database** for your data model.
+- **Apply your schema** (the `ServicePro` and `WorkOrder` entities) to that database.
+- **Generate a publishable key** for the new backend.
+- **Wire your frontend** to the new backend by writing the connection details and key into `.env.local` and `rayfin/.env`.
 
-Leave this running. You'll see logs streaming in the terminal — when it's ready, the CLI prints the URLs for the local backend and the **publishable key** the frontend uses to connect.
-
-> [!help] 
-> If `rayfin dev` complains about Docker, make sure Docker Desktop is running.
+Watch the terminal for progress on each step. The first run takes a couple of minutes.
 
 > [!TIP]
-> The rayfin backend will keep running in the background, even if you close the terminal or Visual Studio Code. To stop it, run `npx rayfin dev stop` from your project folder.
+> The CLI saves the deployment details to `rayfin/.deployments.json` so subsequent `rayfin up` runs update the same deployment instead of creating a new one.
 
-### (Optional) Enable the Aspire dashboard
+## 2. Start the frontend
 
-If you'd like to see live telemetry — request logs, traces, and service health — stop the backend with `npx rayfin dev stop` and restart it with the `--debug` flag:
-
-```sh
-npx rayfin dev --debug
-```
-
-The CLI will print an **Aspire dashboard** URL alongside the backend URLs. Open it in your browser to inspect what the backend is doing as you click around the app. You'll be able to see log traces here, which is super helpful for debugging and understanding how the different services interact.
-
-## 2. Open the data API explorer
-
-Once `rayfin dev` is up, open the URL the CLI printed for the local backend (typically `http://localhost:5168`) in your browser. You'll land on the **OpenAPI / Swagger UI** for your data API, generated automatically from the entities in **rayfin/data/**.
-
-Try expanding the **ServicePro** or **WorkOrder** endpoints: every entity gets full CRUD operations for free, with the validation and authorization rules from your decorators applied.
-
-## 3. Start the frontend
-
-In the VS Code terminal run:
+In the same terminal, run:
 
 ```sh
 npm run dev
 ```
 
-This starts the Vite dev server on `http://localhost:5173`. Open that URL in your browser.
+This starts the Vite dev server on `http://localhost:5173`. Because `rayfin up` already wrote the backend URL and publishable key into `.env.local`, Vite picks them up automatically — your locally-served frontend talks to the freshly provisioned Fabric backend with no extra configuration.
 
-## 4. Sign up as a Service Pro
+Open `http://localhost:5173` in your browser.
 
-Locally, Rayfin uses **email + password** auth (in production, the same app uses Microsoft Entra SSO, no code change required).
+## 3. Sign up as a Service Pro
 
-1. On the auth page, switch to **Sign up** and create an account with any email + password.
+The auth page shows a **"Sign in with Microsoft Fabric"** button — the backend authenticates against Microsoft Entra (Fabric SSO).
+
+1. Sign in with the same Microsoft account you used for Fabric.
 2. After sign-in, you land on the **Service Pro view**. Fill in your name and a few skills (for example `painting, hanging, drilling`) and create your profile.
 3. You'll see one pre-seeded work order ready to be assigned. **Accept it** and then **mark it complete**.
 
 You can edit your profile later if needed in the profile view.
 
-## 5. Switch to the manager view
+## 4. Switch to the manager view
 
 The app also has a manager view at **/manager/**. It's not linked from the Service Pro UI on purpose. Go there directly by adding `/manager/` to the URL in the address bar.
 
@@ -499,85 +473,66 @@ In the manager view you can:
 - Assign them to a Service Pro
 - Track status across all jobs
 
-Create a couple of new work orders and assign them to your Service Pro account. Click on **Jobs** in the nav bar to switch bar to the service pro view and confirm they show up.
+Create a couple of new work orders and assign them to your Service Pro account. Click on **Jobs** in the nav bar to switch back to the Service Pro view and confirm they show up.
 
 ---
 
 ## ✅ Verify
 
-- The terminal running `rayfin dev` shows all services healthy. You can use `npx rayfin dev status` to check the status of each service at any time.
-- The Swagger UI for your local backend opens in the browser.
-- `http://localhost:5173` shows the auth page.
+- `rayfin up` finished without errors and printed a hosting URL and publishable key.
+- `http://localhost:5173` loads the auth page with the **Sign in with Microsoft Fabric** button.
 - You can sign up, create a Service Pro profile, accept the seeded work order, and create new ones from **/manager/**.
 
-When you're ready to take the app to production, leave the local servers running and head to the next step.
+You're now running a real full-stack app — frontend on your machine, backend in the cloud — with no infrastructure to manage.
 
 ===
 
 # Deploy to production
 
-You've seen the app run locally. Now let's take the **same code, same schema, same auth wiring** and ship it to Microsoft Fabric — no infrastructure to provision, no migrations to write, no deployment pipeline to set up. One command.
+Surprise — your app is **already in production**. When you ran `npx rayfin up` to provision the backend in the previous step, the same command also packaged your frontend (`npm run build:fabric`), uploaded it to Fabric's managed static-hosting service, and deployed the schema. There is no separate "ship to prod" step in the Rayfin workflow: every `rayfin up` updates the live deployment.
 
-> [!NOTE]
-> The Fabric workspace and capacity you set up earlier is the deployment target. The bootstrap command you used already wired your project to that workspace via `--workspace-uri`.
+What you've been testing locally with `npm run dev` is the same backend, same database, same schema as the live URL the CLI printed — just with the frontend served from your machine.
 
-## 1. Run **rayfin up**
+## 1. Open the live app
 
-From the project folder, in a new terminal, run:
+Look at the output of the previous `npx rayfin up` and find the **hosting URL** the CLI printed (it looks like `https://<random-prefix>.webapp.rayfin….com`).
 
-```sh
-npx rayfin up --encryption-fallback-enabled
-```
-
-If this is the first time you deploy from this machine, the CLI will:
-
-1. **Open a browser** to sign you in to Microsoft Entra (use the same account you used before if asked).
-2. **Create a Fabric App item** in your Fabric workspace.
-3. **Retrieve the publishable key** for the deployed backend.
-4. **Sync `rayfin.yml`** settings to the remote service (auth, data, static hosting flags).
-5. **Apply your data model** to the remote SQL database — same TypeScript decorators, same schema you used locally.
-6. **Build and deploy your frontend** — runs `npm run build:fabric`, packages `dist/` into a ZIP, uploads it, and serves it from the managed static-hosting service.
-7. **Save deployment details** to `rayfin/.deployments.json` and `rayfin/.env` so future `rayfin up` runs update the same deployment instead of creating a new one.
-
-The whole flow takes a couple of minutes the first time. The CLI streams progress for each step.
-
-When it finishes, the CLI prints:
-
-- A **hosting URL** — your live app.
-- A **Fabric portal link** — to manage the deployment in the Fabric UI.
-- A **deployment ID** — for reference.
-
-[TODO — capture and link a screenshot of the `rayfin up` final output]
-
-## 2. Open the deployed app
-
-Open the **hosting URL** the CLI printed. The auth page now looks different from local — you'll see a **"Sign in with Microsoft Fabric"** button instead of email + password.
-
-That's because deployed Rayfin apps **only support Fabric brokered authentication (Microsoft Entra SSO)**. Email/password is local-dev only. The same **rayfin.yml** had both providers enabled: Rayfin's auth layer auto-selects the right one based on where the app runs.
-
-1. Sign in with the same Fabric account.
-2. You're back in the Service Pro view. Create your profile, accept the seeded work order, same flow as local.
-3. Go to `/manager/` and create a couple of new work orders.
-
-You're now using the **production database** running in your Fabric workspace.
-
-## 3. (Optional) Check the deployment
-
-To inspect deployment health later:
+If you missed it, run:
 
 ```sh
 npx rayfin up status
 ```
 
-To see your app item in the Fabric portal, click the **Fabric portal link** printed by `rayfin up`, or open the workspace you created in [https://app.fabric.microsoft.com](https://app.fabric.microsoft.com).
+to print the current deployment details, including the hosting URL.
+
+Open the hosting URL in a browser tab where you're signed in to Microsoft Fabric. You'll see the same auth page as your local frontend — same **Sign in with Microsoft Fabric** button — because both are pointing at the same Fabric backend.
+
+1. Sign in with the same Microsoft account.
+2. You land in the Service Pro view, with the same profile and the same work orders you created from `localhost:5173` in the previous step. It's literally the same data, served from the same database.
+3. Try creating a work order from `/manager/` on the live URL, then refresh `localhost:5173` — it shows up immediately.
+
+That's it. There is no "deploy" gate to clear; the app you've been working on is already live for anyone with access to your Fabric workspace.
+
+> [!TIP]
+> **Want separate dev and prod environments?** Run `npx rayfin up` against a second Fabric workspace to create a separate deployment with its own backend, database, and frontend. Then switch between deployments anytime with `npx rayfin up switch`. Each deployment is tracked independently in `rayfin/.deployments.json`.
+
+## 2. (Optional) Inspect the deployment in Fabric
+
+To see your app item and its associated SQL Database in the Fabric portal:
+
+1. Open [https://app.fabric.microsoft.com](https://app.fabric.microsoft.com).
+2. Open the workspace you created in the setup step.
+3. You'll see your **Fabric data app** item alongside a **SQL Database** item — that's where your `ServicePro` and `WorkOrder` tables live.
+
+You can also click the **Fabric portal link** that `rayfin up status` prints to jump straight to the deployment.
 
 ---
 
 ## ✅ Verify
 
-- `rayfin up` completed with no errors and printed a hosting URL.
-- The hosting URL opens your app and shows the **"Sign in with Microsoft Fabric"** button.
-- After signing in, you can create a Service Pro profile and work orders against the deployed backend.
+- The hosting URL printed by `rayfin up` opens your live app and shows the **Sign in with Microsoft Fabric** button.
+- After signing in, you see the same data you created locally in the previous step.
+- The Fabric workspace contains a Fabric data app item and its associated SQL Database.
 
 Continue with **Next →** to update the app with a new feature.
 
@@ -659,22 +614,30 @@ Expect to see at least:
 > [!NOTE]
 > **What you didn't have to do:** write a migration, hand-roll an API endpoint, build a REST client, wire up authorization middleware. The decorators + the typed client + the Copilot skill cover all of that for you.
 
-## 5. Apply the schema locally and try it
+## 5. Apply the schema and try it
 
-We asked the agent **not** to run any database changes, so the new **Comment** entity exists only in TypeScript at this point. To actually try the feature in the browser, you need to apply the schema to your local database.
+We asked the agent **not** to run any database changes, so the new **Comment** entity exists only in TypeScript at this point. To actually try the feature in the browser, you need to push the schema to your Fabric backend.
 
-In the terminal where you ran `rayfin dev`, apply the schema:
+In a terminal in your project folder, run:
 
 ```sh
-npx rayfin dev db apply
+npx rayfin up db apply
 ```
 
-This compiles the decorators in `rayfin/data/` to a database migration and applies it to the local SQL database. You should see a confirmation that the new `Comment` table was created.
+This compiles the decorators in `rayfin/data/` to a database migration and applies it to the Fabric SQL database. You should see a confirmation that the new `Comment` table was created.
 
-> [!TIP]
-> If you'd rather use the project's npm script: `npm run rayfin:db` does the same thing.
+> [!alert]
+> If `rayfin up db apply` warns about destructive changes (dropping or renaming columns), review the listed operations carefully before re-running with `--force`. Adding a new entity or new optional fields should not trigger this warning.
 
-Now switch back to the frontend tab in your browser. If the new UI doesn't show up, restart the Vite dev server, in the terminal where `npm run dev` was running, stop it (`Ctrl+C`) and start it again:
+You also need to update the backend APIs and redeploy the frontend with the new UI, so run:
+
+```sh
+npx rayfin up
+```
+
+Note that `rayfin up` runs the full deployment flow, which by default also includes applying any DB migrations (which we already did in the previous step). So it's not mandatory to run both `npx rayfin up db apply` and `npx rayfin up`, but sometimes it may be helpful to run them separately.
+
+Now switch back to the frontend tab in your browser. If the new UI doesn't show up, restart the Vite dev server: in the terminal where `npm run dev` was running, stop it (`Ctrl+C`) and start it again:
 
 ```sh
 npm run dev
@@ -704,49 +667,19 @@ The agent applies refinements with the same project context, so you stay in flow
 ## ✅ Verify
 
 - A new `Comment` entity exists in `rayfin/data/` and is exported from `schema.ts`.
-- `npx rayfin dev db apply` succeeded and the local schema now includes the **Comment** table.
-- The work-order UI has a **collapsible Comments section** (folded by default), and you can post comments end-to-end as a service pro and the manager.
+- `npx rayfin up db apply` succeeded and the Fabric backend now includes the **Comment** table.
+- `npx rayfin up` finished without errors and uploaded the updated frontend.
+- The work-order UI has a **collapsible Comments section** (folded by default), and you can post comments end-to-end as a service pro and the manager — both at `localhost:5173` and at the live hosting URL.
 
-You've added a new schema-backed feature locally. Next, let's push it to production.
+You've shipped a real schema-backed feature end-to-end with two commands. 🎉 Next, let's seed the database with realistic data so we have something interesting to query in the next part.
 
 ===
 
-# Redeploy and seed test data
+# Seed test data
 
-Your new comments feature works locally. Time to push it to production and put it under realistic load by seeding the deployed app with a large generated dataset. This sets us up for the next part, where we'll point Fabric data agents at the production data.
+You shipped a real schema-backed feature in the previous step — schema applied to the Fabric backend, frontend redeployed, end-to-end working through the live URL. One thing remains before we move on to Fabric intelligence: **seed the database with a richer dataset** so the Fabric data agent in the next part has something interesting to work with.
 
-## 1. Redeploy with **rayfin up**
-
-From the project folder, in a terminal, run:
-
-```sh
-npx rayfin up
-```
-
-This re-runs the same flow you saw in Step 5, but the CLI **detects your existing deployment** and updates it in place rather than provisioning a new one. It also picks up the schema change you just made and applies it to the production database automatically.
-
-Watch the output. You should see steps for:
-
-- Syncing `rayfin.yml` settings.
-- **Applying the database schema** — this is where the new **Comment** table is created in production.
-- Building and uploading the new frontend (the collapsible Comments UI).
-
-When it finishes, the CLI prints the same hosting URL as before.
-
-> [!alert]
-> If `rayfin up` warns about destructive changes, review the listed operations carefully before re-running with `--force`. Adding a new entity or new optional fields should not trigger this warning, but dropping or renaming columns will.
-
-## 2. Verify the new feature in production
-
-Open the hosting URL in a browser tab where you're signed in to Microsoft Fabric.
-
-- Sign in (Fabric SSO).
-- Go through the same flow you tested locally: open a work order, expand the **Comments** section, post a comment.
-- Open `/manager/` in another tab and confirm the manager sees the same comments.
-
-If everything works, you've shipped a real schema-backed feature to production with a single command. 🎉
-
-## 3. Seed the production database
+## 1. Seed the database
 
 The template ships with a hidden authenticated admin page at `/_admin/` that can:
 
@@ -765,7 +698,7 @@ Now go back to the Service Pro view and to the manager view at **/manager/**. Yo
 > [!NOTE]
 > **Why we're doing this:** in the next part we'll create a Fabric data agent over this app's database. A handful of seeded rows would make for boring queries, a few hundred makes the agent's natural-language answers more interesting.
 
-## 4. (Optional) Add some comments
+## 2. (Optional) Add some comments
 
 Pick a few work orders and post a couple of comments on each. The data agent in the next part can answer questions about comments too, and a sparse comments thread limits what you can ask.
 
@@ -773,11 +706,9 @@ Pick a few work orders and post a couple of comments on each. The data agent in 
 
 ## ✅ Verify
 
-- `rayfin up` finished without errors and deployed the schema change + the new frontend.
-- The production app shows a working **Comments** section on each work order.
 - You ran the seed in the admin page and the deployed app now has dozens of service pros and work orders.
 
-You now have a fully featured app and a production dataset to query.
+You now have a meaningful production dataset to query.
 
 ===
 
