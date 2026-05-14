@@ -17,8 +17,8 @@ In this exercise, you will sign in to GitHub through Contoso DIY's enterprise SS
 
 1. On the Single Sign-On page, select **Continue** and sign in using the following credentials:
 
-- **Email**: `@lab.CloudPortalCredential(User1).Username`
-- **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
+    - **Email**: `@lab.CloudPortalCredential(User1).Username`
+    - **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
 
 1. After a successful sign-in, you will be redirected to the GitHub homepage. **Keep this browser tab open** as you will need this active session for the next steps.
 

@@ -67,40 +67,13 @@ The `rayfin/data/` folder defines the database tables for this app.
 
 1. Open `schema.ts`.
 
-1. Look for the imports and the `schema` array:
-
-    ```ts
-    import { ServicePro } from './ServicePro.js';
-    import { WorkOrder } from './WorkOrder.js';
-    
-    export type FieldServiceSchema = {
-      ServicePro: ServicePro;
-      WorkOrder: WorkOrder;
-    };
-    
-    export const schema = [ServicePro, WorkOrder];
-    ```
+1. Review the imports and the `schema` array:
 
 1. Remember this rule: every entity must be imported and added to the `schema` array.
 
 1. Open `ServicePro.ts`.
 
-1. Look for this class:
-
-    ```ts
-    @entity()
-    @role('authenticated', '*')
-    export class ServicePro {
-      @uuid() id!: string;
-      @text({ min: 1, max: 100 }) name!: string;
-      @text({ min: 1, max: 300 }) skills!: string;
-      @text() user_id!: string;
-      @date() createdAt!: Date;
-      @date() updatedAt!: Date;
-    }
-    ```
-
-1. Notice these decorators:
+1. Review the **ServicePro** class and notice these decorators:
 
     - `@entity()` creates a database table.
     - `@role('authenticated', '*')` allows signed-in users to create, read, update, and delete rows.
@@ -112,28 +85,7 @@ The `rayfin/data/` folder defines the database tables for this app.
 
 1. Open `WorkOrder.ts`.
 
-1. Look for this class:
-
-    ```ts
-    @entity()
-    @role('authenticated', '*')
-    export class WorkOrder {
-      @uuid() id!: string;
-      @text({ min: 1, max: 120 }) customer!: string;
-      @text({ min: 1, max: 240 }) address!: string;
-      @text({ min: 1, max: 240 }) task!: string;
-      @date() scheduledAt!: Date;
-      @set('pending', 'assigned', 'in_progress', 'completed', 'needs_followup', 'cancelled')
-      status!: WorkOrderStatus;
-      @uuid({ optional: true }) servicePro_id?: string;
-      @one(() => ServicePro, { optional: true }) servicePro?: ServicePro;
-      @text({ optional: true, max: 500 }) note?: string;
-      @date() createdAt!: Date;
-      @date() updatedAt!: Date;
-    }
-    ```
-
-1. Notice these additional decorators and fields:
+1. Review the **WorkOrder** class and notice that it has similar decorators to `ServicePro`, but also has some new ones:
 
     - `@set(...)` limits `status` to known values, such as `pending` and `completed`.
     - `@one(() => ServicePro, { optional: true })` links a work order to a service pro.
