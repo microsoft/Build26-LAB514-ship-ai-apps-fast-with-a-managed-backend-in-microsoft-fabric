@@ -56,3 +56,5 @@ This optional step improves the quality of natural-language insights in the next
 ---
 
 You now have a production-deployed app with a realistic dataset ready for analysis-oriented workflows.
+
+Next → [8. Explore Data with Fabric Intelligence](../instructions/exercise-8-fabric-insights.md)
