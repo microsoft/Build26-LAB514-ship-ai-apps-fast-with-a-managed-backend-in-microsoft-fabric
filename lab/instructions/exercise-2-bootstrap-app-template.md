@@ -8,6 +8,10 @@ The template handles the setup for you, so you can focus on the lab.
 
 ## Task 1: Bootstrap a new Rayfin project from the Field Services template
 
+1. Open a new folder in Visual Studio Code by selecting **File** > **Open Folder** from the toolbar, then create a new folder in the Home directory that opens, name it `Lab514-workorders-@lab.LabInstance.Id`, and select **Select Folder** to open it.
+
+1. Select **Yes, I trust the authors** in the pop-up that appears asked if you trust the files in this folder.
+
 1. Open a terminal in Visual Studio Code by selecting **View** > **Terminal** from the toolbar.
 
 1. Type/Add the following command into the terminal, but do not press **Enter** yet. Leave `<workspace-uri>` in place for now.
@@ -36,7 +40,9 @@ The template handles the setup for you, so you can focus on the lab.
 
 In this task, you will inspect the generated project, initialize a Git repository, and make your first commit. This is important for GitHub Copilot CLI in later exercises, as it will show you clean diffs and what it will be changing when you ask it to generate code.
 
-1. In the Visual Studio Code Explorer, expand the `field-services-app` folder that was created by the bootstrap command. You do not need to open a new Visual Studio Code window.
+1. In the Visual Studio Code Explorer, expand the `field-services-app` folder that was created by the bootstrap command.
+
+    ![Visual Studio Code Explorer](../media/vscode-explorer.png)
 
 1. Review the project structure. It should look something like this:
 
@@ -45,13 +51,11 @@ In this task, you will inspect the generated project, initialize a Git repositor
     - `data/`: Seed data and **the original prompt + dataset used to generate this template** (worth a look if you're curious how it was built)
     - `package.json`: Dependencies and scripts for the project, including `build` and `dev`.
 
-1. In the terminal, run this command to open the new generated project:
+1. In the terminal run the following command to navigate into the new project folder:
 
     ```shell
-    code field-services-app
+    cd field-services-app
     ```
-
-1. You can now close the previous VS Code window, as we won't be using it anymore. In the new VS Code window that you opened with the project, open the terminal.
 
 1. Run this command to initialize a new Git repository:
 

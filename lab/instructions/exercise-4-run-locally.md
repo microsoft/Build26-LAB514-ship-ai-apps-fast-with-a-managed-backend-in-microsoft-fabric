@@ -60,12 +60,11 @@ The frontend is the React app that users interact with.
 
 ## Task 3: Sign up as a Service Pro
 
-The auth page shows a **"Sign in with Microsoft Fabric"** button — the backend authenticates against Microsoft Entra (Fabric SSO).
+The auth page shows a **"Sign in with Microsoft"** button — the backend authenticates against Microsoft Entra (Fabric SSO).
 
-1. Select the **"Sign in with Microsoft Fabric"** button. Use the same Microsoft Fabric account you signed in with in Exercise 1:
+1. Select the **Sign in with Microsoft** button. Since you already have an active SSO session from Exercise 1, you should be signed in automatically without needing to enter credentials again.
 
-    - **Email**: `@lab.CloudPortalCredential(User1).Username`
-    - **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
+1. After successful sign-in, a Microsoft Fabric dialog will pop up asking you to allow the app to access your profile information. Select **Accept** to continue.
 
 1. After sign-in, create your Service Pro profile.
 

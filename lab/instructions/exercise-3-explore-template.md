@@ -61,19 +61,15 @@ The `rayfin/data/` folder defines the database tables for this app.
 
 1. You should see these files:
 
+    - `schema.ts`
     - `ServicePro.ts`
     - `WorkOrder.ts`
-    - `schema.ts`
 
-1. Open `schema.ts`.
-
-1. Review the imports and the `schema` array:
+1. Open `schema.ts` and review the imports and the `schema` array:
 
 1. Remember this rule: every entity must be imported and added to the `schema` array.
 
-1. Open `ServicePro.ts`.
-
-1. Review the **ServicePro** class and notice these decorators:
+1. Open `ServicePro.ts` and review the **ServicePro** class and notice these decorators:
 
     - `@entity()` creates a database table.
     - `@role('authenticated', '*')` allows signed-in users to create, read, update, and delete rows.
@@ -83,9 +79,7 @@ The `rayfin/data/` folder defines the database tables for this app.
     > [!Note]
     > `user_id` is `@text()` because auth provider user IDs are strings. It is not a relationship to another Rayfin entity.
 
-1. Open `WorkOrder.ts`.
-
-1. Review the **WorkOrder** class and notice that it has similar decorators to `ServicePro`, but also has some new ones:
+1. Open `WorkOrder.ts` and review the **WorkOrder** class and notice that it has similar decorators to `ServicePro`, but also has some new ones:
 
     - `@set(...)` limits `status` to known values, such as `pending` and `completed`.
     - `@one(() => ServicePro, { optional: true })` links a work order to a service pro.
@@ -101,8 +95,8 @@ You do not need to understand the full frontend in this exercise.
 
 1. If you have time, look at these files:
 
-    - `ServiceContainer.ts` — singleton that bootstraps the Rayfin client and auto-selects the right auth provider (password locally, Fabric Entra in production).
-    - `rayfin/RayfinFieldService.ts` — CRUD operations for `ServicePro` and `WorkOrder` using the typed Rayfin data API.
+    - `services/ServiceContainer.ts` — singleton that bootstraps the Rayfin client and auto-selects the right auth provider (password locally, Fabric Entra in production).
+    - `services/rayfin/RayfinFieldService.ts` — CRUD operations for `ServicePro` and `WorkOrder` using the typed Rayfin data API.
 
 1. Keep these ideas in mind:
 
