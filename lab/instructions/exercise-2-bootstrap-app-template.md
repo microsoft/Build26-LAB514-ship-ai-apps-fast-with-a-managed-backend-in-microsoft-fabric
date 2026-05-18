@@ -28,7 +28,7 @@ The template handles the setup for you, so you can focus on the lab.
     - Wire the project to your Fabric workspace using the `--workspace-uri` you provided.
     - Run `npm install` in the new project folder to pull dependencies (this can take a couple of minutes on first run).
 
-1. As this is running, open the `/data` folder at *C:\LabFiles\template\field-services-app* to see the original prompt and dataset used to generate this template. This will give you a better understanding of how the app was built and ideas on how to customize it later in the lab.
+1. While the install is running, open the `data` folder at *C:\LabFiles\template\field-services-app* to see the original prompt and dataset used to generate this template. This will give you a better understanding of how the app was built and ideas on how to customize it later in the lab.
 
 ## Task 2: Explore the generated project and make your first commit
 
@@ -73,6 +73,4 @@ In this task, you will inspect the generated project, initialize a Git repositor
     git commit -m "Initial commit - bootstrap from template"
     ```
 
----
-
-Next → [3. Explore the Project](../instructions/exercise-3-explore-template.md)
+Continue with **Next →** to explore the codebase.

@@ -59,6 +59,4 @@ Let's take a look at the deployed app and database in the Microsoft Fabric porta
 
     ![Fabric SQL Database tables](../media/fabric-sql-tables.png)
 
----
-
-Next → [6. Add a Feature with Copilot CLI](../instructions/exercise-6-new-feature.md)
+Continue with **Next →** to update the app with a new feature.

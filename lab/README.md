@@ -27,13 +27,13 @@ The scenario centers on Contoso DIY, a home-improvement retailer expanding into 
 Through the exercises, you'll explore how Contoso DIY:
 
 - Bootstraps a production-ready field-services app from a template and uses Fabric Apps and Rayfin SDK to model service pros, work orders, authentication, data, and hosting declaratively
-- Provisions a managed Fabric backend with a SQL database, authentication, and static hosting from day one — no infrastructure scripts, no migrations to write by hand
+- Provisions a managed Fabric backend with a SQL database, authentication, and static hosting with a single command and no cloud configuration
 - Uses GitHub Copilot CLI and the Rayfin agent skill to add features across the schema and user interface, applying schema changes locally and in production without hand-writing migrations
 - Seeds the deployed app with realistic data and uses Microsoft Fabric intelligence, semantic models, and data agents to ask natural-language questions about operational data
 
 You'll walk in the Contoso DIY team's shoes to build, ship, evolve, and analyze a real enterprise app. The exercises are designed to be completed in order because each step builds on the app, data model, deployment, and resources created in the previous exercises, so make sure you complete each exercise before moving on to the next one.
 
-Select Next > to go to the first exercise.
+Select **Next →** to start the lab.
 
 ===
 

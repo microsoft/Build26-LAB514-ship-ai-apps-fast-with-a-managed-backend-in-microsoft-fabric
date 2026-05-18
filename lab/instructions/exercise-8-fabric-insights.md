@@ -17,7 +17,7 @@ A semantic model gives the data agent a clean, well-described view of your data 
 
 1. Navigate to the Microsoft Fabric portal and open the workspace you created for this lab.
 
-1. Select **+ New items** from the top menu and in the dialog, search and select **Semantic model**.
+1. Select **+ New item** from the top menu and in the dialog, search and select **Semantic model**.
 
 1. In the semantic model creation experience, select **OneLake catalog** as the data source type.
 
@@ -127,6 +127,6 @@ Use the agent's chat interface to ask questions about your seeded production dat
 
     You should see the response from copilot using the data agent as its knowledge source.
 
----
+You have successfully created a Fabric data agent over your production data and used it to answer natural-language questions.
 
-Next → [7. Conclusion](../instructions/exercise-9-conclusion.md)
+Continue with **Next →** for the conclusion of the lab and next steps.

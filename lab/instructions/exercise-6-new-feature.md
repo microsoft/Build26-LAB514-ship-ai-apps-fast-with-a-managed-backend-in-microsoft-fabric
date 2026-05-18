@@ -34,12 +34,6 @@ Start GitHub Copilot CLI from the app project folder so it can read the project 
 
 1. Open a terminal in Visual Studio Code.
 
-1. Confirm that the terminal is in the `field-services-app` folder. If not, navigate to it with:
-
-    ```shell
-    cd field-services-app
-    ```
-
 1. Launch GitHub Copilot CLI:
 
     ```shell
@@ -181,8 +175,6 @@ The manager cannot see comments on assigned work orders. Please review the permi
 
 After GitHub Copilot CLI applies a fix, repeat the relevant validation steps from Task 5 and Task 6.
 
----
-
 You have completed the feature implementation and validation workflow for the Field Services app.
 
-Next → [7. Seed Data for Analysis](../instructions/exercise-7-seed-data.md)
+Continue with **Next →** to Seed Data for Analysis.

@@ -114,4 +114,4 @@ You do not need to understand the full frontend in this exercise.
 
 If either question is unclear, review Task 2 and Task 3 before continuing.
 
-Next → [4. Run the app locally](../instructions/exercise-4-run-locally.md)
+Continue with **Next →** to run the App locally.

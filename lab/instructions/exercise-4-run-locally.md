@@ -54,7 +54,9 @@ The frontend is the React app that users interact with.
 
 The authentication page includes a **"Sign in with Microsoft"** button, and the backend uses Microsoft Entra (Fabric SSO) for sign-in.
 
-1. Select the **Sign in with Microsoft** button. Since you already have an active SSO session from Exercise 1, you should be signed in automatically without needing to enter credentials again.
+1. Select the **Sign in with Microsoft** button. Since you already have an active SSO session from Exercise 1, you should be signed in automatically without needing to enter credentials again. Otherwise, sign in with the same Microsoft account you used for Fabric:
+    - **Email**: `@lab.CloudPortalCredential(User1).Username`
+    - **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
 
 1. After successful sign-in, a Microsoft Fabric dialog will pop up asking you to allow the app to use your Microsoft Fabric credentials. Select **Accept** to continue.
 
@@ -96,6 +98,4 @@ The same app also includes a manager view.
 
 1. Back in the Visual Studio Code terminal, stop the Vite dev server by pressing **Ctrl+C**.
 
----
-
-Next → [5. Deploy to Microsoft Fabric](../instructions/exercise-5-deploy-to-production.md)
+Continue with **Next →** to deploy the app to production.

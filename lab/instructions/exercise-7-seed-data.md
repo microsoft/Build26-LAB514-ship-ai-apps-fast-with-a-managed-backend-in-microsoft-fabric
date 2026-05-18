@@ -53,8 +53,6 @@ If time permits, add comments to multiple work orders so downstream analysis has
 
 This optional step improves the quality of natural-language insights in the next part of the lab.
 
----
-
 You now have a production-deployed app with a realistic dataset ready for analysis-oriented workflows.
 
-Next → [8. Explore Data with Fabric Intelligence](../instructions/exercise-8-fabric-insights.md)
+Continue with **Next →** to Explore Data with Fabric Intelligence.

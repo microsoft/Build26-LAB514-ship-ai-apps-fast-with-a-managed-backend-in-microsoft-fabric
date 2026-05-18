@@ -48,11 +48,16 @@ In this exercise, you will sign in to GitHub through Contoso DIY's enterprise SS
 
 1. When prompted to sign in, use the following credentials:
 
-- **Email**: `@lab.CloudPortalCredential(User1).Username`
-- **Password**: `@lab.CloudPortalCredential(User1).Password`
+    - **Email**: `@lab.CloudPortalCredential(User1).Username`
+    - **TAP**: `@lab.CloudPortalCredential(User1).AccessToken`
 
-> [!Tip]
-> Since you already used these credentials to sign in to the GitHub SSO portal, you may not be prompted to enter them again and will be signed in automatically.
+    > [!Tip]
+    > Since you already used these credentials to sign in to the GitHub SSO portal, you may not be prompted to enter them again and will be signed in automatically.
+
+1. After a successful sign-in, you will land on the Microsoft Fabric homepage. **Keep this browser tab open** as you will need this active session for the next steps.
+
+    > [!Important]
+    > If the page title and icon in the bottom left corner of the page say "Power BI", you need to switch to the Fabric portal. Click on the **Power BI** icon in the bottom left corner, then select **Fabric** to switch to the Microsoft Fabric portal.
 
 ## Task 5: Create a Workspace in Fabric
 
@@ -80,4 +85,4 @@ npm --version
 copilot --version
 ```
 
-Next → [2. Bootstrap app from template](../instructions/exercise-2-bootstrap-app-template.md)
+Select **Next →** to start the second exercise.
