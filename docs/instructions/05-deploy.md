@@ -15,7 +15,7 @@ You will:
 
 1. In the terminal output from the **npx rayfin up** command you ran in Exercise 4, find the **static hosting URL** printed by the CLI. The URL should look similar to `https://<random-prefix>.webapp.rayfin….com`.
 
-    ![Rayfin up command output](../img/rayfin-up.png)
+    ![Rayfin up command output](../../img/rayfin-up.png)
 
     > [!TIP]
     > If you missed the hosting URL, run `npx rayfin up status` from the **field-services-app** folder to print the current deployment details.
@@ -49,6 +49,6 @@ Let's take a look at the deployed app and database in the Microsoft Fabric porta
 
 1. Select each table to see the data contained within it.
 
-    ![Fabric SQL Database tables](../img/fabric-sql-tables.png)
+    ![Fabric SQL Database tables](../../img/fabric-sql-tables.png)
 
 Continue with **Next →** to update the app with a new feature.

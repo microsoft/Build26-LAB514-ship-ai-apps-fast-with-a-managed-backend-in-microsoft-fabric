@@ -21,17 +21,17 @@ A semantic model gives the data agent a clean, well-described view of your data 
 
 1. In the semantic model creation experience, select **OneLake catalog** as the data source type.
 
-    ![Create semantic model from OneLake catalog](../img/fabric-create-semantic-model.png)
+    ![Create semantic model from OneLake catalog](../../img/fabric-create-semantic-model.png)
 
 1. Select the SQL Database item and select **Connect**.
 
-    ![Select SQL Database from OneLake catalog](../img/fabric-select-sql-database.png)
+    ![Select SQL Database from OneLake catalog](../../img/fabric-select-sql-database.png)
 
 1. Provide a name for the semantic model, in this case, `FieldServices`.
 
 1. Select the **ServicePros**, **WorkOrders**, and **WorkOrderComments** tables to include in the model and select **Confirm** to create the model.
 
-    ![Select tables for semantic model](../img/fabric-select-tables-semantic-model.png)
+    ![Select tables for semantic model](../../img/fabric-select-tables-semantic-model.png)
 
     > [!Note]
     > This process will take a few minutes to complete.
@@ -61,7 +61,7 @@ A semantic model gives the data agent a clean, well-described view of your data 
     - WorkOrders: `Work orders for field service jobs. Each has a status, may be assigned to a Service Pro, and has a scheduled date.`
     - WorkOrderComments: `Comments on work orders. Each comment is associated with a single work order and includes content, the authoring user, and a timestamp.`
 
-    ![Add descriptions to tables in semantic model](../img/fabric-add-table-descriptions.png)
+    ![Add descriptions to tables in semantic model](../../img/fabric-add-table-descriptions.png)
 
     > [!Tip]
     > Adding descriptions is optional but highly recommended, as the data agent uses them to understand your data and answer questions accurately. Spend a few minutes here, it pays back tenfold in agent answer quality.
@@ -78,7 +78,7 @@ A semantic model gives the data agent a clean, well-described view of your data 
 
 1. In the **Add data source** dialog, select the **Semantic model** you created in Task 1 and select **Add**.
 
-    ![Add semantic model as data source for agent](../img/fabric-add-data-source-agent.png)
+    ![Add semantic model as data source for agent](../../img/fabric-add-data-source-agent.png)
 
 1. In the explorer panel, select the tables you want the agent to have access to. Check the boxes next to **ServicePros**, **WorkOrders**, and **WorkOrderComments**.
 

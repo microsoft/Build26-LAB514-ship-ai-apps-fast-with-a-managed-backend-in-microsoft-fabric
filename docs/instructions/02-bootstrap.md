@@ -44,7 +44,7 @@ In this task, you will inspect the generated project, initialize a Git repositor
 
 1. In the Visual Studio Code Explorer, expand the **field-services-app** folder that was created by the bootstrap command.
 
-    ![Visual Studio Code Explorer](../img/vscode-explorer.png)
+    ![Visual Studio Code Explorer](../../img/vscode-explorer.png)
 
 1. Review the project structure. It should look something like this:
 
