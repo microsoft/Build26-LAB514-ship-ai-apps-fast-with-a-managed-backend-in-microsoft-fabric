@@ -48,13 +48,13 @@ Skip the infra plumbing and ship a real enterprise app. In this hands-on lab, bu
 To get started in a guided lab session:
 - Open the lab environment provided to you
 - Sign in to GitHub and to Microsoft Fabric using the credentials shared by the proctor
-- Open the [`/docs/`](./docs/README.md) folder and start with [Step 1: Setup & prerequisites](./docs/01-setup/README.md)
+- Open the [`/docs/`](./docs/README.md) folder and start with [Step 1: Setup Your Environment](./docs/instructions/01-setup.md)
 
 ### 🏠 Getting started in your own environment
 
 If you're following these steps at your own pace:
 - Clone this repository
-- Complete [Step 1: Setup & prerequisites](./docs/01-setup/README.md) to install Node.js, the GitHub Copilot CLI, and the Microsoft Fabric tooling
+- Complete [Step 1: Setup Your Environment](./docs/instructions/01-setup.md) to install Node.js, the GitHub Copilot CLI, and the Microsoft Fabric tooling
 - Sign in to a Microsoft Fabric workspace where you have permission to deploy apps (note: deploying may incur cloud costs)
 - Work through the lab steps starting at [`/docs/`](./docs/README.md)
 
