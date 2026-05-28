@@ -48,10 +48,20 @@ export interface NewWorkOrderCommentInput {
   content: string;
 }
 
+export type SeedProgressStage = 'clearing' | 'servicePros' | 'workOrders';
+export type SeedProgressCallback = (
+  stage: SeedProgressStage,
+  completed: number,
+  total: number
+) => void;
+
 export interface IFieldService {
   bootstrapDemoData(): Promise<void>;
   getDataSummary(): Promise<AdminDataSummary>;
-  replaceWithSeedData(seedData: FieldServiceSeedDataset): Promise<AdminDataSummary>;
+  replaceWithSeedData(
+    seedData: FieldServiceSeedDataset,
+    onProgress?: SeedProgressCallback
+  ): Promise<AdminDataSummary>;
   resetDemoData(): Promise<AdminDataSummary>;
   getServicePros(): Promise<ServicePro[]>;
   getMyProfile(userId: string): Promise<ServicePro | null>;

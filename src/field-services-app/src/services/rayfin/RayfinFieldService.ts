@@ -7,6 +7,7 @@ import {
   IFieldService,
   NewWorkOrderCommentInput,
   NewWorkOrderInput,
+  SeedProgressCallback,
 } from '../interfaces/IFieldService';
 
 import { getRayfinClient } from './RayfinClientService';
@@ -65,16 +66,41 @@ const INITIAL_DEMO_ORDER = {
   note: 'Initial example work order. Leave unassigned so any Service Pro can accept it.',
 };
 
-const WRITE_BATCH_SIZE = 20;
+const WRITE_BATCH_SIZE = 5;
 const READ_PAGE_SIZE = 100;
+const WRITE_RETRY_ATTEMPTS = 3;
+const WRITE_RETRY_BASE_DELAY_MS = 500;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function withRetry<T>(operation: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < WRITE_RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (attempt < WRITE_RETRY_ATTEMPTS - 1) {
+        await sleep(WRITE_RETRY_BASE_DELAY_MS * 2 ** attempt);
+      }
+    }
+  }
+  throw lastError;
+}
 
 async function runInBatches<T>(
   items: T[],
-  operation: (item: T) => Promise<unknown>
+  operation: (item: T) => Promise<unknown>,
+  onProgress?: (completed: number, total: number) => void
 ): Promise<void> {
+  let completed = 0;
   for (let index = 0; index < items.length; index += WRITE_BATCH_SIZE) {
     const batch = items.slice(index, index + WRITE_BATCH_SIZE);
-    await Promise.all(batch.map((item) => operation(item)));
+    await Promise.all(batch.map((item) => withRetry(() => operation(item) as Promise<unknown>)));
+    completed += batch.length;
+    onProgress?.(completed, items.length);
   }
 }
 
@@ -108,45 +134,57 @@ export class RayfinFieldService implements IFieldService {
   }
 
   async replaceWithSeedData(
-    seedData: FieldServiceSeedDataset
+    seedData: FieldServiceSeedDataset,
+    onProgress?: SeedProgressCallback
   ): Promise<AdminDataSummary> {
     this.validateSeedData(seedData);
-    await this.clearAllData();
+    await this.clearAllData((completed, total) =>
+      onProgress?.('clearing', completed, total)
+    );
 
     const serviceProIdsBySeedId = new Map<string, string>();
+    let profileCompleted = 0;
     for (const seedProfile of seedData.servicePros) {
-      const profile = await this.createProfile(
-        seedProfile.userId,
-        seedProfile.name,
-        seedProfile.skills.join(', ')
+      const profile = await withRetry(() =>
+        this.createProfile(
+          seedProfile.userId,
+          seedProfile.name,
+          seedProfile.skills.join(', ')
+        )
       );
       serviceProIdsBySeedId.set(seedProfile.seedId, profile.id);
+      profileCompleted++;
+      onProgress?.('servicePros', profileCompleted, seedData.servicePros.length);
     }
 
-    await runInBatches(seedData.workOrders, async (seedOrder) => {
-      const serviceProId = seedOrder.serviceProSeedId
-        ? serviceProIdsBySeedId.get(seedOrder.serviceProSeedId)
-        : null;
+    await runInBatches(
+      seedData.workOrders,
+      async (seedOrder) => {
+        const serviceProId = seedOrder.serviceProSeedId
+          ? serviceProIdsBySeedId.get(seedOrder.serviceProSeedId)
+          : null;
 
-      if (seedOrder.serviceProSeedId && !serviceProId) {
-        throw new Error(
-          `Seed work order ${seedOrder.id} references unknown Service Pro ${seedOrder.serviceProSeedId}.`
-        );
-      }
+        if (seedOrder.serviceProSeedId && !serviceProId) {
+          throw new Error(
+            `Seed work order ${seedOrder.id} references unknown Service Pro ${seedOrder.serviceProSeedId}.`
+          );
+        }
 
-      const created = await this.createWorkOrder({
-        customer: seedOrder.customer,
-        address: seedOrder.address,
-        task: seedOrder.task,
-        scheduledAt: new Date(seedOrder.scheduledAt),
-        servicePro_id: serviceProId,
-        note: seedOrder.note,
-      });
+        const created = await this.createWorkOrder({
+          customer: seedOrder.customer,
+          address: seedOrder.address,
+          task: seedOrder.task,
+          scheduledAt: new Date(seedOrder.scheduledAt),
+          servicePro_id: serviceProId,
+          note: seedOrder.note,
+        });
 
-      if (created.status !== seedOrder.status) {
-        await this.updateWorkOrderStatus(created.id, seedOrder.status);
-      }
-    });
+        if (created.status !== seedOrder.status) {
+          await this.updateWorkOrderStatus(created.id, seedOrder.status);
+        }
+      },
+      (completed, total) => onProgress?.('workOrders', completed, total)
+    );
 
     const summary = await this.getDataSummary();
     if (
@@ -419,18 +457,26 @@ export class RayfinFieldService implements IFieldService {
     );
   }
 
-  private async clearAllData(): Promise<void> {
+  private async clearAllData(
+    onProgress?: (completed: number, total: number) => void
+  ): Promise<void> {
     const client = getRayfinClient();
     const [workOrders, servicePros] = await Promise.all([
       this.getWorkOrders(),
       this.getServicePros(),
     ]);
 
-    await runInBatches(workOrders, (workOrder) =>
-      client.data.WorkOrder.delete({ id: workOrder.id })
+    const total = workOrders.length + servicePros.length;
+
+    await runInBatches(
+      workOrders,
+      (workOrder) => client.data.WorkOrder.delete({ id: workOrder.id }),
+      (completed) => onProgress?.(completed, total)
     );
-    await runInBatches(servicePros, (servicePro) =>
-      client.data.ServicePro.delete({ id: servicePro.id })
+    await runInBatches(
+      servicePros,
+      (servicePro) => client.data.ServicePro.delete({ id: servicePro.id }),
+      (completed) => onProgress?.(workOrders.length + completed, total)
     );
     this.demoDataChecked = false;
   }

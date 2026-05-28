@@ -14,10 +14,23 @@ import { Button } from '@/components/ui/button';
 import type {
   AdminDataSummary,
   FieldServiceSeedDataset,
+  SeedProgressStage,
 } from '@/services/interfaces/IFieldService';
 import { ServiceContainer } from '@/services/ServiceContainer';
 
 type AdminAction = 'seed' | 'reset' | null;
+
+type SeedProgress = {
+  stage: SeedProgressStage;
+  completed: number;
+  total: number;
+};
+
+const STAGE_LABELS: Record<SeedProgressStage, string> = {
+  clearing: 'Clearing existing data',
+  servicePros: 'Creating Service Pros',
+  workOrders: 'Creating work orders',
+};
 
 const fieldServiceSeed = seedData as FieldServiceSeedDataset;
 
@@ -27,6 +40,7 @@ export function AdminPage() {
   const [activeAction, setActiveAction] = useState<AdminAction>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [seedProgress, setSeedProgress] = useState<SeedProgress | null>(null);
 
   const seedStats = useMemo(
     () => ({
@@ -55,11 +69,16 @@ export function AdminPage() {
     setActiveAction(action);
     setError(null);
     setMessage(null);
+    setSeedProgress(null);
 
     try {
       const nextSummary =
         action === 'seed'
-          ? await fieldService.replaceWithSeedData(fieldServiceSeed)
+          ? await fieldService.replaceWithSeedData(
+              fieldServiceSeed,
+              (stage, completed, total) =>
+                setSeedProgress({ stage, completed, total })
+            )
           : await fieldService.resetDemoData();
 
       setSummary(nextSummary);
@@ -75,6 +94,7 @@ export function AdminPage() {
       );
     } finally {
       setActiveAction(null);
+      setSeedProgress(null);
     }
   };
 
@@ -112,6 +132,34 @@ export function AdminPage() {
         {message && (
           <Alert>
             <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        )}
+        {activeAction === 'seed' && seedProgress && (
+          <Alert>
+            <AlertDescription>
+              <div className="flex w-full flex-col gap-2">
+                <div className="flex w-full items-center justify-between gap-4 text-sm font-medium">
+                  <span>{STAGE_LABELS[seedProgress.stage]}</span>
+                  <span className="tabular-nums text-slate-600">
+                    {seedProgress.completed} / {seedProgress.total}
+                  </span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                  <div
+                    className="h-full rounded-full bg-emerald-500 transition-all"
+                    style={{
+                      width: `${
+                        seedProgress.total > 0
+                          ? Math.round(
+                              (seedProgress.completed / seedProgress.total) * 100
+                            )
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </AlertDescription>
           </Alert>
         )}
 
